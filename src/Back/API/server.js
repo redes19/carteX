@@ -9,10 +9,10 @@ app.use(cors());
 
 const mariadb = require("mariadb");
 const pool = mariadb.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PWD,
-  database: process.env.DB_DTB,
+  host: process.env.DB_HOST_PROJECTUSER,
+  user: process.env.DB_USER_PROJECTUSER,
+  password: process.env.DB_PWD_PROJECTUSER,
+  database: process.env.DB_DTB_PROJECTUSER,
 });
 
 
