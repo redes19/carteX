@@ -1,5 +1,7 @@
 import React from "react";
 import Header from "./Front/Component/Header.jsx";
+import Inscription from "./Front/Component/Inscription.jsx";
+import Connection from "./Front/Component/Connection.jsx";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
@@ -69,8 +71,10 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <Header />
         <Routes>
-          <Route path="/" element={<Header />}></Route>
+          <Route path="/Inscription" element={<Inscription />}></Route>
+          <Route path="/Connection" element={<Connection />}></Route>
         </Routes>
       </header>
     </div>
