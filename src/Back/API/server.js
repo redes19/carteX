@@ -10,10 +10,10 @@ app.use(cors());
 const mariadb = require("mariadb");
 const { log } = require("console");
 const pool = mariadb.createPool({
-  host: process.env.DB_HOST_PROJECTUSER,
-  user: process.env.DB_USER_PROJECTUSER,
-  password: process.env.DB_PWD_PROJECTUSER,
-  database: process.env.DB_DTB_PROJECTUSER,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PWD,
+  database: process.env.DB_DTB,
 });
 
 app.get("/Utilisateur", async (req, res) => {
@@ -97,7 +97,7 @@ app.post("/login", async (req, res) => {
     res.json({
       message: "Connexion réussie",
       userId: user.id,
-      userName: user.first_name,
+      userName: user.nom,
     });
   } catch (err) {
     console.error("Erreur lors de la connexion:", err);
