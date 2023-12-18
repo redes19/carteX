@@ -8,12 +8,11 @@ app.use(express.json());
 app.use(cors());
 
 const mariadb = require("mariadb");
-const { log } = require("console");
 const pool = mariadb.createPool({
-  host: process.env.DB_HOST_PROJECTUSER,
-  user: process.env.DB_USER_PROJECTUSER,
-  password: process.env.DB_PWD_PROJECTUSER,
-  database: process.env.DB_DTB_PROJECTUSER,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PWD,
+  database: process.env.DB_DTB,
 });
 
 app.get("/Utilisateur", async (req, res) => {
@@ -81,14 +80,16 @@ app.post("/login", async (req, res) => {
       [req.body.email]
     );
 
-    console.log(req.body);
     if (result.length === 0) {
       return res.status(404).json({ error: "Utilisateur non trouvé" });
     }
+
     const user = result[0];
-    console.log(user.mdp);
-    const passwordMatch = await bcrypt.compare(req.body.password, user.mdp);
-    console.log("fheufgezu");
+    const passwordMatch = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+
     if (!passwordMatch) {
       return res.status(401).json({ error: "Mot de passe incorrect" });
     }
