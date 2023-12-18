@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Container,
-  Typography,
-  TextField,
-  Button,
-} from "@mui/material";
-
+import { Container, Typography, TextField, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = (theme) => ({
   form: {
@@ -15,17 +10,11 @@ const useStyles = (theme) => ({
     maxWidth: "300px",
     margin: "auto",
   },
-  // textField: {
-  //   marginBottom: theme.spacing(2),
-  // },
-  // button: {
-  //   marginTop: theme.spacing(2),
-  // },
 });
-
 
 const Connexion = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,12 +41,11 @@ const Connexion = () => {
       localStorage.setItem("userId", userId);
       localStorage.setItem("userName", userName);
 
-      console.log(response.data.userId);
-      console.log(response.data.userName);
-
       setIsLoggedIn(true);
       setUserName(userName);
-      console.log(localStorage);
+
+      // Trigger a navigation to the current page to reload the header
+      navigate(window.location.pathname);
     } catch (error) {
       console.error("Erreur lors de la connexion:", error);
     }
@@ -69,7 +57,7 @@ const Connexion = () => {
       {isLoggedIn ? (
         <Typography variant="h2">
           <form onSubmit={handleSubmit}>
-            Vous êtes connecté en tant que :{ userName }  
+            Vous êtes connecté en tant que :{userName}
           </form>
         </Typography>
       ) : (
