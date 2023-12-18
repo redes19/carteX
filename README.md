@@ -12,6 +12,7 @@ Lancer le projet :
 - git clone
 - npm install
 - npm start
+- nodemon /src/Back/API/server.js
 
 ligne de commande
 niveau back :
