@@ -51,7 +51,7 @@ app.post("/Utilisateurs", async (req, res) => {
         // L'email n'existe pas, procéder à l'insertion
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         const query =
-        "INSERT INTO Utilisateurs (email, Mdp, Prenom, Nom) VALUES (?, ?, ?,?)";
+        "INSERT INTO Utilisateurs (Email, Mdp, Prenom, Nom) VALUES (?, ?, ?,?)";
         
         const resultInsert = await conn.query(query, [
             req.body.email,
