@@ -17,12 +17,12 @@ const pool = mariadb.createPool({
 
 
 
-app.get("/users", async (req, res) => {
+app.get("/Utilisateurs", async (req, res) => {
     let conn;
     try {
         conn = await pool.getConnection();
         console.log("lancement");
-        const rows = await conn.query("SELECT * FROM users");
+        const rows = await conn.query("SELECT * FROM Utilisateurs");
         console.log(rows);
         res.status(200).json(rows);
     } catch (err) {
@@ -32,14 +32,14 @@ app.get("/users", async (req, res) => {
 
 
 
-app.post("/users", async (req, res) => {
+app.post("/Utilisateurs", async (req, res) => {
     let conn;
     
     try {
         conn = await pool.getConnection();
         console.log("lancement requete");
         // Vérifiez si l'email existe déjà
-        const result = await conn.query("SELECT * FROM users WHERE email = ?", [
+        const result = await conn.query("SELECT * FROM Utilisateurs WHERE Email = ?", [
             req.body.email,
         ]);
         console.log("email", req.body.email);
@@ -51,7 +51,7 @@ app.post("/users", async (req, res) => {
         // L'email n'existe pas, procéder à l'insertion
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         const query =
-        "INSERT INTO users (email, password, first_name) VALUES (?, ?, ?)";
+        "INSERT INTO Utilisateurs (email, Mdp, Prenom, Nom) VALUES (?, ?, ?,?)";
         
         const resultInsert = await conn.query(query, [
             req.body.email,
@@ -79,7 +79,7 @@ app.post("/login", async (req, res) => {
     try {
       conn = await pool.getConnection();
   
-      const result = await conn.query("SELECT * FROM users WHERE email = ?", [
+      const result = await conn.query("SELECT * FROM Utilisateurs WHERE email = ?", [
         req.body.email,
       ]);
   
@@ -112,7 +112,7 @@ app.post("/login", async (req, res) => {
   });
 
 
-  
+
 app.listen(3001, () => {
   console.log("Serveur à l'écoute");
 });
