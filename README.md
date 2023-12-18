@@ -15,14 +15,14 @@ Lancer le projet :
 
 ligne de commande
 niveau back :
-npm install express --save
-npm install dotenv
-npm install cors
-npm install mariadb
-npm install bcrypt
+- npm install express --save
+- npm install dotenv
+- npm install cors
+- npm install mariadb
+- npm install bcrypt
 
 nodemon "nom du fichier"
 
 style :
-npm install @mui/material @emotion/react @emotion/styled
-npm install @mui/icons-material
+- npm install @mui/material @emotion/react @emotion/styled
+- npm install @mui/icons-material
