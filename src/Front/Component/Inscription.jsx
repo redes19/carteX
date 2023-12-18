@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Container,
   Typography,
@@ -15,12 +15,6 @@ const useStyles = (theme) => ({
     maxWidth: "300px",
     margin: "auto",
   },
-  textField: {
-    marginBottom: theme.spacing(2),
-  },
-  button: {
-    marginTop: theme.spacing(2),
-  },
 });
 
 const Inscription = () => {
@@ -35,7 +29,7 @@ const Inscription = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3001/Utilisateurs", {
+      const response = await axios.post("http://localhost:3001/Utilisateur", {
         email,
         password,
         prenom: firstName,
