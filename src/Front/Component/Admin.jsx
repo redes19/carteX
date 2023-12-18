@@ -14,7 +14,6 @@ const AdminPage = () => {
         console.error('Error fetching user data:', error);
       }
     };
-
     fetchData();
   }, []);
 
@@ -26,6 +25,7 @@ const AdminPage = () => {
     } catch (error) {
       console.error('Error deleting user:', error);
     }
+    window.location.reload();
   };
 
   return (
