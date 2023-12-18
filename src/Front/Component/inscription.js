@@ -29,7 +29,7 @@ const Inscription = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState(""); // Added last name state
+  const [lastName, setLastName] = useState(""); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
