@@ -10,11 +10,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-<<<<<<< HEAD
     "axios": "^1.6.2",
-=======
-    "node": "^21.2.0",
->>>>>>> d49875e4fa738d932f0a0d6781645848040cdc35
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
