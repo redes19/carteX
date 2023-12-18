@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./Front/Component/Header.jsx";
 import Inscription from "./Front/Component/Inscription.jsx";
 import Connection from "./Front/Component/Connection.jsx";
+import AdminPage from "./Front/Component/Admin.jsx";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
@@ -75,6 +76,7 @@ function App() {
         <Routes>
           <Route path="/Inscription" element={<Inscription />}></Route>
           <Route path="/Connection" element={<Connection />}></Route>
+          <Route path="/Admin" element={<AdminPage />}></Route>
         </Routes>
       </header>
     </div>
