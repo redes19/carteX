@@ -32,6 +32,7 @@ const Connexion = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("isLoggedIn") === "true"
   );
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     localStorage.setItem("isLoggedIn", isLoggedIn.toString());
@@ -45,14 +46,17 @@ const Connexion = () => {
         email,
         password,
       });
-      const { userId } = response.data;
+      const { userId, userName } = response.data;
 
       // Enregistrez l'ID de l'utilisateur dans le local storage
       localStorage.setItem("userId", userId);
+      localStorage.setItem("userName", userName);
 
       console.log(response.data.userId);
+      console.log(response.data.userName);
 
       setIsLoggedIn(true);
+      setUserName(userName);
       console.log(localStorage);
     } catch (error) {
       console.error("Erreur lors de la connexion:", error);
@@ -64,7 +68,9 @@ const Connexion = () => {
       <Typography variant="h2">Connexion</Typography>
       {isLoggedIn ? (
         <Typography variant="h2">
-          Bonjour! Vous êtes connecté.
+          <form onSubmit={handleSubmit}>
+            Vous êtes connecté en tant que :{ userName }  
+          </form>
         </Typography>
       ) : (
         <form className={classes.form} onSubmit={handleSubmit}>
