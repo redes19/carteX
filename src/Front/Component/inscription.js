@@ -54,7 +54,7 @@ const Inscription = () => {
     setEmail("");
     setPassword("");
     setFirstName("");
-    setLastName(""); // Clear last name
+    setLastName(""); 
   };
 
   return (
