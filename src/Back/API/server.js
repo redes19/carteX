@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(cors());
 
 const mariadb = require("mariadb");
-const pool = mariadb.createPool({
+const pool_user = mariadb.createPool({
   host: process.env.DB_HOST_PROJECTUSER,
   user: process.env.DB_USER_PROJECTUSER,
   password: process.env.DB_PWD_PROJECTUSER,
@@ -20,7 +20,7 @@ const pool = mariadb.createPool({
 app.get("/Utilisateurs", async (req, res) => {
     let conn;
     try {
-        conn = await pool.getConnection();
+        conn = await pool_user.getConnection();
         console.log("lancement");
         const rows = await conn.query("SELECT * FROM Utilisateurs");
         console.log(rows);
@@ -36,7 +36,7 @@ app.post("/Utilisateurs", async (req, res) => {
     let conn;
     
     try {
-        conn = await pool.getConnection();
+        conn = await pool_user.getConnection();
         console.log("lancement requete");
         // Vérifiez si l'email existe déjà
         const result = await conn.query("SELECT * FROM Utilisateurs WHERE Email = ?", [
@@ -77,7 +77,7 @@ app.post("/login", async (req, res) => {
     let conn;
   
     try {
-      conn = await pool.getConnection();
+      conn = await pool_user.getConnection();
   
       const result = await conn.query("SELECT * FROM Utilisateurs WHERE email = ?", [
         req.body.email,
