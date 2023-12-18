@@ -21,7 +21,7 @@ const AdminPage = () => {
   const handleDeleteUser = async (userId) => {
     try {
       await axios.delete(`http://localhost:3001/user/${userId}`);
-      // Actualiser la liste des utilisateurs après la suppression
+      // mettre une methode pour refraiche le delete
       setUserData((prevUserData) => prevUserData.filter(user => user.id !== userId));
     } catch (error) {
       console.error('Error deleting user:', error);

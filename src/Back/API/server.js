@@ -56,10 +56,12 @@ app.post("/user", async (req, res) => {
       req.body.prenom,
       req.body.nom,
     ]);
-    console.log(req.body.id);
+    const lastInsertId = Number(resultInsert.insertId);
+    console.log("ID de l'utilisateur créé:", lastInsertId);
 
     res.json({
       message: "Utilisateur créé avec succès",
+      userId: lastInsertId,
     });
   } catch (err) {
     console.error("Erreur lors de la création de l'utilisateur:", err);
@@ -105,7 +107,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.delete("/user/:userId", async (res, req) => {
+app.delete("/user/:userId", async (req, res) => {
   let conn;
 
   try {
