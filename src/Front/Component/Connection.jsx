@@ -61,6 +61,9 @@ const Connexion = () => {
     } catch (error) {
       console.error("Erreur lors de la connexion:", error);
     }
+
+    setEmail("");
+    setPassword("");
   };
 
   return (
