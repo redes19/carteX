@@ -1,27 +1,21 @@
-import React, { useState } from "react";
 import axios from "axios";
+import React, { useState } from "react";
 import {
   Container,
   Typography,
   TextField,
   Button,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
 
-const useStyles = makeStyles((theme) => ({
+
+const useStyles = (theme) => ({
   form: {
     display: "flex",
     flexDirection: "column",
     maxWidth: "300px",
     margin: "auto",
   },
-  textField: {
-    marginBottom: theme.spacing(2),
-  },
-  button: {
-    marginTop: theme.spacing(2),
-  },
-}));
+});
 
 const Inscription = () => {
   const classes = useStyles();
@@ -35,7 +29,7 @@ const Inscription = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3001/Utilisateurs", {
+      const response = await axios.post("http://localhost:3001/Utilisateur", {
         email,
         password,
         prenom: firstName,
