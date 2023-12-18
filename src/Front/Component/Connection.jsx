@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Container,
@@ -15,12 +15,12 @@ const useStyles = (theme) => ({
     maxWidth: "300px",
     margin: "auto",
   },
-  textField: {
-    marginBottom: theme.spacing(2),
-  },
-  button: {
-    marginTop: theme.spacing(2),
-  },
+  // textField: {
+  //   marginBottom: theme.spacing(2),
+  // },
+  // button: {
+  //   marginTop: theme.spacing(2),
+  // },
 });
 
 
@@ -53,13 +53,17 @@ const Connexion = () => {
       localStorage.setItem("userName", userName);
 
       console.log(response.data.userId);
+      console.log(response.data.userName);
 
       setIsLoggedIn(true);
-      setUserName(response.data.userName);
+      setUserName(userName);
       console.log(localStorage);
     } catch (error) {
       console.error("Erreur lors de la connexion:", error);
     }
+
+    setEmail("");
+    setPassword("");
   };
 
   return (
@@ -67,7 +71,9 @@ const Connexion = () => {
       <Typography variant="h2">Connexion</Typography>
       {isLoggedIn ? (
         <Typography variant="h2">
-          Bonjour, {userName} ! Vous êtes connecté.
+          <form onSubmit={handleSubmit}>
+            Vous êtes connecté en tant que :{ userName }  
+          </form>
         </Typography>
       ) : (
         <form className={classes.form} onSubmit={handleSubmit}>
