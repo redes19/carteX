@@ -18,4 +18,3 @@ niveau back :
 npm install express --save
 npm install dotenv
 npm install cors
-npm install nodemon
