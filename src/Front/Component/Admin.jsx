@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button  } from "@mui/material";
 import axios from 'axios';
 
 const AdminPage = () => {
@@ -8,7 +8,7 @@ const AdminPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/Utilisateur');
+        const response = await axios.get('http://localhost:3001/user');
         setUserData(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -17,6 +17,16 @@ const AdminPage = () => {
 
     fetchData();
   }, []);
+
+  const handleDeleteUser = async (userId) => {
+    try {
+      await axios.delete(`http://localhost:3001/user/${userId}`);
+      // Actualiser la liste des utilisateurs après la suppression
+      setUserData((prevUserData) => prevUserData.filter(user => user.id !== userId));
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
 
   return (
     <Paper>
@@ -32,6 +42,7 @@ const AdminPage = () => {
               <TableCell>Email</TableCell>
               <TableCell>Prénom</TableCell>
               <TableCell>Nom</TableCell>
+              <TableCell>Action</TableCell> 
             </TableRow>
           </TableHead>
           <TableBody>
@@ -41,6 +52,11 @@ const AdminPage = () => {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.prenom}</TableCell>
                 <TableCell>{user.nom}</TableCell>
+                <TableCell>
+                  <Button variant="outlined" color="secondary" onClick={() => handleDeleteUser(user.id)}>
+                    Delete
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -48,6 +64,7 @@ const AdminPage = () => {
       </TableContainer>
     </Paper>
   );
+
 };
 
 export default AdminPage;

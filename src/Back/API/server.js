@@ -15,7 +15,7 @@ const pool = mariadb.createPool({
   database: process.env.DB_DTB,
 });
 
-app.get("/Utilisateur", async (req, res) => {
+app.get("/user", async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -28,7 +28,7 @@ app.get("/Utilisateur", async (req, res) => {
   }
 });
 
-app.post("/Utilisateur", async (req, res) => {
+app.post("/user", async (req, res) => {
   let conn;
 
   try {
@@ -85,10 +85,7 @@ app.post("/login", async (req, res) => {
     }
 
     const user = result[0];
-    const passwordMatch = await bcrypt.compare(
-      req.body.password,
-      user.mdp
-    );
+    const passwordMatch = await bcrypt.compare(req.body.password, user.mdp);
 
     if (!passwordMatch) {
       return res.status(401).json({ error: "Mot de passe incorrect" });
@@ -105,6 +102,29 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "Erreur lors de la connexion" });
   } finally {
     if (conn) conn.release();
+  }
+});
+
+app.delete("/user/:userId", async (res, req) => {
+  let conn;
+
+  try {
+    conn = await pool.getConnection();
+    const userId = req.params.userId;
+    console.log("Connexion à la base de données réussie");
+
+    const userExists = await conn.query(
+      "SELECT * FROM Utilisateur WHERE id = ? ",
+      [userId]
+    );
+
+    if (userExists.length === 0) {
+      return res.status(404).json({ error: "user non trouvé" });
+    }
+
+    await conn.query("DELETE FROM Utilisateur WHERE id = ?", [userId]);
+  } catch (err) {
+    console.error(err);
   }
 });
 
