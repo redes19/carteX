@@ -26,3 +26,7 @@ nodemon "nom du fichier"
 style :
 - npm install @mui/material @emotion/react @emotion/styled
 - npm install @mui/icons-material
+
+niveau front :
+npm install react-router-dom
+npm install axios
