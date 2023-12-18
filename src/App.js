@@ -32,35 +32,36 @@ function App() {
   }
 
   const getAPIData = () => {
-    let url = "https://db.ygoprodeck.com/api/v7/cardinfo.php/?&num=300&offset=0"; // URL of the API to get the data (external side) - here we get the 300 first cards
+    // modify to have the 300 first cards (we are limited to 72 cards from CORS limitations)
+    let url = "https://db.ygoprodeck.com/api/v7/cardinfo.php/?&num=72&offset=0"; // URL of the API to get the data (external side) - here we get the 300 first cards
     axios.get(url)
       .then((response) => {
-        console.log(response);
-        response.data.forEach((carte) => {
-          // For each card, insert it in the database via API calls
-          loadAPIData(carte);
-        });
+        console.log(response.data.data);
+        loadAPIData(response.data.data);
       })
       .catch((error) => {
-        console.log("Error");
+        console.log("Error1");
       })
   }
 
-  const loadAPIData = (carte) => {
+  const loadAPIData = (data) => {
     // we will probably have to change the data shape or URL
 
-    let url = ""; // URL of the API to insert the data (our side)
-    axios.post(url, carte)
+    let url = "http://localhost:3001/cards"; // URL of the API to insert the data (our side)
+    axios.post(url, 
+        { 
+          "data": data
+        }
+      )
       .then((response) => {
         console.log(response);
-        // alert("Success");
+        console.log("Success");
       })
       .catch((error) => {
-        console.log("Error");
-        // alert("Error");
+        console.log("Error2");
       })
   }
-
+  getAPIData();
 
   return (
     <div className="App">

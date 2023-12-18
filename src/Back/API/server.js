@@ -8,17 +8,26 @@ app.use(express.json());
 app.use(cors());
 
 const mariadb = require("mariadb");
-const pool = mariadb.createPool({
+const pool_user = mariadb.createPool({
   host: process.env.DB_HOST_PROJECTUSER,
   user: process.env.DB_USER_PROJECTUSER,
   password: process.env.DB_PWD_PROJECTUSER,
   database: process.env.DB_DTB_PROJECTUSER,
 });
 
+const pool_card = mariadb.createPool({
+  host: process.env.DB_HOST_PROJECT,
+  user: process.env.DB_USER_PROJECT,
+  password: process.env.DB_PWD_PROJECT,
+  database: process.env.DB_DTB_PROJECT,
+});
+
+
 app.get("/Utilisateur", async (req, res) => {
   let conn;
+  console.log("Request GET /Utilisateur");
   try {
-    conn = await pool.getConnection();
+    conn = await pool_user.getConnection();
     console.log("lancement");
     const rows = await conn.query("SELECT * FROM Utilisateur");
     console.log(rows);
@@ -32,7 +41,7 @@ app.post("/Utilisateur", async (req, res) => {
   let conn;
 
   try {
-    conn = await pool.getConnection();
+    conn = await pool_user.getConnection();
     console.log("lancement requete");
     // Vérifiez si l'email existe déjà
     const result = await conn.query(
@@ -73,7 +82,7 @@ app.post("/login", async (req, res) => {
   let conn;
 
   try {
-    conn = await pool.getConnection();
+    conn = await pool_user.getConnection();
 
     const result = await conn.query(
       "SELECT * FROM Utilisateur WHERE email = ?",
@@ -107,6 +116,69 @@ app.post("/login", async (req, res) => {
     if (conn) conn.release();
   }
 });
+
+
+// CARD PART
+
+app.get("/cards", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool_card.getConnection();
+    console.log("Request GET /cards");
+    const rows = await conn.query("SELECT * FROM Carte");
+    console.log(rows);
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+app.get("/cards/:id", async (req, res) => {
+  let conn;
+  try {
+    conn = await pool_card.getConnection();
+    console.log("Request GET /cards/:id");
+    const rows = await conn.query("SELECT * FROM Carte WHERE id = ?", [req.params.id]);
+    console.log(rows);
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+app.post("/cards", async (req, res) => {
+  // console.log(req.body)
+  try{
+    let conn = await pool_card.getConnection();
+    console.log("Request POST /cards\n")
+
+    req.body.data.forEach(async (card) => {
+      const result = await conn.query("SELECT * FROM Carte WHERE cardId = ?", [card.id]);
+      if(result.length == 0){
+        const query = "INSERT INTO Carte (name, `desc`, imageUrl, race, type, frameType, cardId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        console.log(card.name)
+        const resultInsert = await conn.query(query, [
+          card.name, 
+          card.desc, 
+          card.card_images[0].image_url, 
+          card.race, 
+          card.type, 
+          card.frameType, 
+          card.id
+        ]);
+        console.log(card)
+      }      
+    });    
+    res.status(200).json("Success");
+
+  }
+  catch(err){
+      console.log("Erreur" + err);
+      // res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
 
 app.listen(3001, () => {
   console.log("Serveur à l'écoute");
