@@ -21,6 +21,8 @@ npm install cors
 npm install mariadb
 npm install bcrypt
 
+nodemon "nom du fichier"
+
 style :
 npm install @mui/material @emotion/react @emotion/styled
 npm install @mui/icons-material
