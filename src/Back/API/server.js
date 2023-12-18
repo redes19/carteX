@@ -98,7 +98,7 @@ app.post("/login", async (req, res) => {
     res.json({
       message: "Connexion réussie",
       userId: user.id,
-      userName: user.first_name,
+      userName: user.nom,
     });
   } catch (err) {
     console.error("Erreur lors de la connexion:", err);
