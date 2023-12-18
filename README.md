@@ -20,7 +20,19 @@ niveau back :
 - npm install cors
 - npm install mariadb
 - npm install bcrypt
+<<<<<<< HEAD
+=======
+
+nodemon server.js
+>>>>>>> App.js
 
 style :
 - npm install @mui/material @emotion/react @emotion/styled
 - npm install @mui/icons-material
+<<<<<<< HEAD
+=======
+
+niveau front :
+npm install react-router-dom
+npm install axios
+>>>>>>> App.js
