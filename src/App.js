@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./Front/Component/Header.jsx";
 import Inscription from "./Front/Component/Inscription.jsx";
 import Connection from "./Front/Component/Connection.jsx";
+import Menu from "./Front/Component/Menu.jsx";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
@@ -40,7 +41,6 @@ function App() {
     let url = "https://db.ygoprodeck.com/api/v7/cardinfo.php/?&num=72&offset=0"; // URL of the API to get the data (external side) - here we get the 300 first cards
     axios.get(url)
       .then((response) => {
-        console.log(response.data.data);
         loadAPIData(response.data.data);
       })
       .catch((error) => {
@@ -74,6 +74,7 @@ function App() {
         <Routes>
           <Route path="/Inscription" element={<Inscription />}></Route>
           <Route path="/Connection" element={<Connection />}></Route>
+          <Route path="/Menu" element={<Menu />}></Route>
         </Routes>
       </header>
     </div>

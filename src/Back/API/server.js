@@ -121,9 +121,9 @@ app.get("/cards", async (req, res) => {
   let conn;
   try {
     conn = await pool_card.getConnection();
-    console.log("Request GET /cards");
+    // console.log("Request GET /cards");
     const rows = await conn.query("SELECT * FROM Carte");
-    console.log(rows);
+    conn.release();
     res.status(200).json(rows);
   } catch (err) {
     console.error(err);
@@ -134,9 +134,9 @@ app.get("/cards/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool_card.getConnection();
-    console.log("Request GET /cards/:id");
+    // console.log("Request GET /cards/:id");
     const rows = await conn.query("SELECT * FROM Carte WHERE id = ?", [req.params.id]);
-    console.log(rows);
+    conn.release();
     res.status(200).json(rows);
   } catch (err) {
     console.error(err);
@@ -147,13 +147,12 @@ app.post("/cards", async (req, res) => {
   // console.log(req.body)
   try{
     let conn = await pool_card.getConnection();
-    console.log("Request POST /cards\n")
+    // console.log("Request POST /cards\n")
 
     req.body.data.forEach(async (card) => {
       const result = await conn.query("SELECT * FROM Carte WHERE cardId = ?", [card.id]);
       if(result.length == 0){
         const query = "INSERT INTO Carte (name, `desc`, imageUrl, race, type, frameType, cardId) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        console.log(card.name)
         const resultInsert = await conn.query(query, [
           card.name, 
           card.desc, 
@@ -163,15 +162,95 @@ app.post("/cards", async (req, res) => {
           card.frameType, 
           card.id
         ]);
-        console.log(card)
       }      
     });    
-    res.status(200).json("Success");
-
+    conn.release();
   }
   catch(err){
       console.log("Erreur" + err);
       // res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
+app.post("/cards/search", async (req, res) => { 
+  console.log('hey')
+  try{
+    let conn = await pool_card.getConnection();
+    let query = "SELECT * FROM Carte "; 
+    let params = [];
+    let bool = false;
+
+    // IS THERE A NAME ?
+    if(req.params.search["name"] = "true"){
+      query += "WHERE name LIKE ? ";
+      params.push("%" + req.params.search["name"] + "%");
+      bool = true;
+    }
+
+    // IS THERE A TYPE ?  
+    if(req.params.search["type"] != "default"){
+      if(bool){
+        query += "AND type LIKE ? ";
+      }
+      else{
+        query += "WHERE type LIKE ? ";
+        bool = true;
+      }
+      params.push("%" + req.params.search["type"] + "%");
+    }
+    
+    // IS THERE A RARITY GIVEN ?
+    if(req.params.search["rarity"] != "default"){
+      if(bool){
+        query += "AND rarity LIKE ? ";
+      }
+      else{
+        query += "WHERE rarity LIKE ? ";
+        bool = true;
+      }
+      params.push("%" + req.params.search["rarity"] + "%");
+    }
+
+    // ARE THERE SEARCHTERMS ?
+    if(req.params.search["terms"] != ""){
+      if(bool){
+        query += "AND (name LIKE ? OR `desc` LIKE ?) ";
+      }
+      else{
+        query += "WHERE (name LIKE ? OR `desc` LIKE ?) ";
+        bool = true;
+      }
+      let terms = req.params.search["terms"].split(" ");
+      let termsString = "";
+      terms.forEach((term) => {
+        termsString += "%" + term + "%";
+      });
+      params.push(termsString);
+    }
+
+    // PRICE
+    if(bool){
+      query += "AND price >= ? AND price <= ? ";
+    }
+    else{
+      query += "WHERE price >= ? AND price <= ? ";
+      bool = true;
+    }
+    console.log(query)
+    params.push(req.params.search["minprice"]);
+    params.push(req.params.search["maxprice"]);
+
+    let order = req.params.search["order"];
+    
+    params = [name, type, minprice, maxprice, rarity, order];
+    
+    const rows = await conn.query(query, params);
+    conn.release();
+    res.status(200).json(rows);
+  }
+  catch (err){
+    console.log("Erreur" + err);
   }
 });
 
