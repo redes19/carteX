@@ -36,7 +36,7 @@ export default function Menu() {
   
         let name;
         if(filterName != null){
-          name = filterName.value;
+          name = filterName.checked;
         }else{
           name = "false";
         }

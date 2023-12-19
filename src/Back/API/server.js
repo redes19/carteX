@@ -174,8 +174,6 @@ app.post("/cards", async (req, res) => {
 
 
 app.get("/cards/search/:name/:type/:minprice/:maxprice/:rarity/:order/:terms", async (req, res) => { 
-  console.log('hey')
-  console.log(req.params.terms)
   try{
     let conn = await pool_card.getConnection();
     let query = "SELECT * FROM Carte "; 
@@ -238,7 +236,7 @@ app.get("/cards/search/:name/:type/:minprice/:maxprice/:rarity/:order/:terms", a
 
 
     // IS THERE A NAME ?
-    if(req.params.name != "default"){
+    if(req.params.name != "false"){
       if(bool){
         query += "AND name LIKE ? ";
       }
@@ -250,9 +248,9 @@ app.get("/cards/search/:name/:type/:minprice/:maxprice/:rarity/:order/:terms", a
     }
 
     // ORDER
-    query += "ORDER BY ? ";
-    params.push(req.params.order);
-
+    query += "ORDER BY name " + req.params.order ;
+    // params.push(req.params.order);
+    console.log(query, params)
     const rows = await conn.query(query, params);
     conn.release();
     res.status(200).json(rows);

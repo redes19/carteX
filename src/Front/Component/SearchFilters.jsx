@@ -67,8 +67,8 @@ export default function SearchFilters() {
         <div className='searchFilters-order-container'>
             <label for="searchFilters-order">Ordre</label>
             <select name="searchFilters-order" id="searchFilters-order">
-                <option value="desc">Descendant</option>
-                <option value="asc">Ascendant</option>
+                <option value="DESC">Descendant</option>
+                <option value="ASC">Ascendant</option>
             </select>
         </div>
 
