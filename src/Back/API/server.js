@@ -18,20 +18,16 @@ const pool = mariadb.createPool({
   database: process.env.DB_DTB,
 });
 
-app.get("/Utilisateur", async (req, res) => {
+app.get("/user",verifyToken,async (req, res) => {
   let conn;
-  console.log("Route /Utilisateur appelée");
-  console.log("User Data:", req.userData);
-  console.log("User ID:", req.userData.userId);
   try {
     conn = await pool.getConnection();
+    console.log("lancement");
     const rows = await conn.query("SELECT * FROM Utilisateur");
+    console.log(rows);
     res.status(200).json(rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Erreur lors de la récupération des utilisateurs" });
-  } finally {
-    if (conn) conn.release();
   }
 });
 
