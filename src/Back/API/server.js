@@ -2,6 +2,9 @@ const express = require("express"); // récupération express
 const app = express(); // variable utilisant la librairie express
 const bcrypt = require("bcrypt");
 let cors = require("cors");
+const jwt = require('jsonwebtoken');
+const verifyToken = require('./verifyToken');
+
 require("dotenv").config();
 
 app.use(express.json());
@@ -37,7 +40,7 @@ app.get("/Utilisateur", async (req, res) => {
   }
 });
 
-app.post("/Utilisateur", async (req, res) => {
+app.post("/user", async (req, res) => {
   let conn;
 
   try {
@@ -65,10 +68,12 @@ app.post("/Utilisateur", async (req, res) => {
       req.body.prenom,
       req.body.nom,
     ]);
-    console.log(req.body.id);
+    const lastInsertId = Number(resultInsert.insertId);
+    console.log("ID de l'utilisateur créé:", lastInsertId);
 
     res.json({
       message: "Utilisateur créé avec succès",
+      userId: lastInsertId,
     });
   } catch (err) {
     console.error("Erreur lors de la création de l'utilisateur:", err);
@@ -77,6 +82,8 @@ app.post("/Utilisateur", async (req, res) => {
       .json({ error: "Erreur lors de la création de l'utilisateur" });
   }
 });
+
+const secretKey = process.env.JWT_SECRET_KEY; // Récupérer la clé secrète depuis une variable d'environnement
 
 app.post("/login", async (req, res) => {
   let conn;
@@ -100,11 +107,24 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Mot de passe incorrect" });
     }
 
-    // Ajouter le nom d'utilisateur à la réponse
+
+    // Créer un token JWT
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        isAdmin: user.isAdmin, 
+      },
+      secretKey,
+      { expiresIn: '1h' } 
+    );
+
+
+    // Ajouter le nom d'utilisateur et le token à la réponse
     res.json({
       message: "Connexion réussie",
       userId: user.id,
       userName: user.nom,
+      token : token,
     });
   } catch (err) {
     console.error("Erreur lors de la connexion:", err);
