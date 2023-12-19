@@ -269,7 +269,58 @@ app.get("/user/inventory", async (req, res) => {
   }
 });
 
+app.get("/user/decks/:deckId/cards", async (req, res) => {
+  const { deckId } = req.params;
 
+  const token = req.headers.authorization.split(' ')[1];
+
+  const userId = getUserIdFromToken(token);
+  
+  try {
+    // Assurez-vous que la logique d'accès à la base de données est correcte
+    const conn = await pool.getConnection();
+
+    // Sélectionnez les cartes associées au deck
+    const cardsQuery = `
+      SELECT Carte.id, Carte.name, Carte.desc, Carte.imageUrl
+      FROM projet.CarteDeck
+      JOIN projet.Carte ON CarteDeck.carte_id = Carte.id
+      WHERE CarteDeck.deck_id = ?;
+    `;
+
+    const cardsResult = await conn.query(cardsQuery, [deckId]);
+
+    res.status(200).json(cardsResult);
+  } catch (err) {
+    console.error("Error fetching deck cards:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (conn) conn.release();
+  }
+});
+
+app.get("/user/decks", verifyToken, async (req, res) => {
+  try {
+    const userId = getUserIdFromToken(req.headers.authorization.split(' ')[1]);
+
+    // Utilisez une seule connexion pour effectuer la transaction
+    const conn = await pool_user.getConnection();
+
+    try {
+      // Sélectionnez tous les decks de l'utilisateur depuis la base de données principale
+      const decksQuery = "SELECT * FROM Deck WHERE utilisateur_id = ?";
+      const decksResult = await conn.query(decksQuery, [userId]);
+
+      res.status(200).json(decksResult);
+    } finally {
+      // Assurez-vous de libérer la connexion après utilisation
+      if (conn) conn.release();
+    }
+  } catch (err) {
+    console.error("Error fetching user decks:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 app.listen(3001, () => {
   console.log("Serveur à l'écoute");
