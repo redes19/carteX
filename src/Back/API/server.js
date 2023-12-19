@@ -27,7 +27,7 @@ const pool_card = mariadb.createPool({
 });
 
 
-app.get("/user", async (req, res) => {
+app.get("/user", verifyToken,async (req, res) => {
   let conn;
   console.log("Request GET /Utilisateur");
   try {
@@ -87,6 +87,26 @@ app.post("/user", async (req, res) => {
     if (conn) conn.release();
   }
 });
+
+// delete user
+
+app.delete("/user/:id",verifyToken, async (req, res) => {
+  let conn;
+  try {
+    conn = await pool_user.getConnection();
+    console.log("Request DELETE /user/:id");
+    const rows = await conn.query("DELETE FROM Utilisateur WHERE id = ?", [
+      req.params.id,
+    ]);
+    console.log(rows);
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    if (conn) conn.release();
+  }
+}
+);
 
 const secretKey = process.env.JWT_SECRET_KEY; // Récupérer la clé secrète depuis une variable d'environnement
 

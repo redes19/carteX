@@ -30,16 +30,23 @@ const AdminPage = () => {
 
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(`http://localhost:3001/user/${userId}`);
-      // Mettez une méthode pour rafraîchir la suppression
+      // Supprimer l'utilisateur du serveur
+      await axios.delete(`http://localhost:3001/user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      // Mettre à jour l'état local (userData) sans attendre une réponse du serveur
       setUserData((prevUserData) => prevUserData.filter(user => user.id !== userId));
     } catch (error) {
       console.error('Error deleting user:', error);
+  
       // Utilisez navigate pour rediriger l'utilisateur vers la page /
       navigate('/');
     }
-    window.location.reload();
   };
+  
 
   return (
     <Paper>
