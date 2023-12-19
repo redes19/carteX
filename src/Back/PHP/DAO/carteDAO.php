@@ -1,6 +1,6 @@
 <?php
 
-require_once 'carte.php';
+require_once '../Class/carte.php';
 
 class CarteDAO {
     private $db;

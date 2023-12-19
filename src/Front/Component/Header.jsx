@@ -13,6 +13,9 @@ const Header = () => {
                   <li>
                     <Link to="/Connection">Connection</Link>
                   </li>
+                  <li>
+                    <Link to="/carte" >Carte</Link>
+                  </li>
                 </ul>
             </nav>
         </header>

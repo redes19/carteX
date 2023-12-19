@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./Front/Component/Header.jsx";
 import Inscription from "./Front/Component/Inscription.jsx";
 import Connection from "./Front/Component/Connection.jsx";
+import Carte from "./Front/Component/carte.jsx";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
@@ -38,33 +39,33 @@ function App() {
   const getAPIData = () => {
     // modify to have the 300 first cards (we are limited to 72 cards from CORS limitations)
     let url = "https://db.ygoprodeck.com/api/v7/cardinfo.php/?&num=72&offset=0"; // URL of the API to get the data (external side) - here we get the 300 first cards
-    axios.get(url)
+    axios
+      .get(url)
       .then((response) => {
         console.log(response.data.data);
         loadAPIData(response.data.data);
       })
       .catch((error) => {
         console.log("Error1");
-      })
-  }
+      });
+  };
 
   const loadAPIData = (data) => {
     // we will probably have to change the data shape or URL
 
     let url = "http://localhost:3001/cards"; // URL of the API to insert the data (our side)
-    axios.post(url, 
-        { 
-          "data": data
-        }
-      )
+    axios
+      .post(url, {
+        data: data,
+      })
       .then((response) => {
         console.log(response);
         console.log("Success");
       })
       .catch((error) => {
         console.log("Error2");
-      })
-  }
+      });
+  };
   getAPIData();
 
   return (
@@ -74,6 +75,7 @@ function App() {
         <Routes>
           <Route path="/Inscription" element={<Inscription />}></Route>
           <Route path="/Connection" element={<Connection />}></Route>
+          <Route path="/carte" element={<Carte />}></Route>
         </Routes>
       </header>
     </div>
