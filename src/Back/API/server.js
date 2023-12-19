@@ -173,23 +173,18 @@ app.post("/cards", async (req, res) => {
 });
 
 
-app.post("/cards/search", async (req, res) => { 
+app.get("/cards/search/:name/:type/:minprice/:maxprice/:rarity/:order/:terms", async (req, res) => { 
   console.log('hey')
+  console.log(req.params.terms)
   try{
     let conn = await pool_card.getConnection();
     let query = "SELECT * FROM Carte "; 
     let params = [];
     let bool = false;
-
-    // IS THERE A NAME ?
-    if(req.params.search["name"] = "true"){
-      query += "WHERE name LIKE ? ";
-      params.push("%" + req.params.search["name"] + "%");
-      bool = true;
-    }
+    let terms = "";
 
     // IS THERE A TYPE ?  
-    if(req.params.search["type"] != "default"){
+    if(req.params.type != "default"){
       if(bool){
         query += "AND type LIKE ? ";
       }
@@ -197,11 +192,11 @@ app.post("/cards/search", async (req, res) => {
         query += "WHERE type LIKE ? ";
         bool = true;
       }
-      params.push("%" + req.params.search["type"] + "%");
+      params.push("%" + req.params.type + "%");
     }
     
     // IS THERE A RARITY GIVEN ?
-    if(req.params.search["rarity"] != "default"){
+    if(req.params.rarity != "default"){
       if(bool){
         query += "AND rarity LIKE ? ";
       }
@@ -209,11 +204,11 @@ app.post("/cards/search", async (req, res) => {
         query += "WHERE rarity LIKE ? ";
         bool = true;
       }
-      params.push("%" + req.params.search["rarity"] + "%");
+      params.push("%" + req.params.rarity + "%");
     }
 
     // ARE THERE SEARCHTERMS ?
-    if(req.params.search["terms"] != ""){
+    if(req.params.terms != "nosearch"){
       if(bool){
         query += "AND (name LIKE ? OR `desc` LIKE ?) ";
       }
@@ -221,36 +216,49 @@ app.post("/cards/search", async (req, res) => {
         query += "WHERE (name LIKE ? OR `desc` LIKE ?) ";
         bool = true;
       }
-      let terms = req.params.search["terms"].split(" ");
+      terms = req.params.terms.split(" ");
       let termsString = "";
       terms.forEach((term) => {
         termsString += "%" + term + "%";
       });
       params.push(termsString);
+      params.push(termsString);
     }
 
-    // PRICE
-    if(bool){
-      query += "AND price >= ? AND price <= ? ";
-    }
-    else{
-      query += "WHERE price >= ? AND price <= ? ";
-      bool = true;
-    }
-    console.log(query)
-    params.push(req.params.search["minprice"]);
-    params.push(req.params.search["maxprice"]);
+    // PRICE TBA
+    // if(bool){
+    //   query += "AND price >= ? AND price <= ? ";
+    // }
+    // else{
+    //   query += "WHERE price >= ? AND price <= ? ";
+    //   bool = true;
+    // }
+    // params.push(req.params.minprice);
+    // params.push(req.params.maxprice);
 
-    let order = req.params.search["order"];
-    
-    params = [name, type, minprice, maxprice, rarity, order];
-    
+
+    // IS THERE A NAME ?
+    if(req.params.name != "default"){
+      if(bool){
+        query += "AND name LIKE ? ";
+      }
+      else{
+        query += "WHERE name LIKE ? ";
+        bool = true;
+      }
+      params.push("%" + terms + "%");
+    }
+
+    // ORDER
+    query += "ORDER BY ? ";
+    params.push(req.params.order);
+
     const rows = await conn.query(query, params);
     conn.release();
     res.status(200).json(rows);
   }
   catch (err){
-    console.log("Erreur" + err);
+    console.log("Erreur " + err);
   }
 });
 
