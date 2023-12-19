@@ -3,6 +3,7 @@ import Header from "./Front/Component/Header.jsx";
 import Inscription from "./Front/Component/Inscription.jsx";
 import Connection from "./Front/Component/Connection.jsx";
 import AdminPage from "./Front/Component/Admin.jsx";
+import Inventaire from "./Front/Component/Inventaire.jsx";
 import {AuthProvider} from "./Front/Component/AuthProvider.jsx";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
@@ -78,6 +79,7 @@ function App() {
             <Route path="/Inscription" element={<Inscription />} />
             <Route path="/Connection" element={<Connection />} />
             <Route path="/Admin" element={<AdminPage />} />
+            <Route path="/Inventaire" element={<Inventaire />} />
           </Routes>
         </header>
       </div>

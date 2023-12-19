@@ -235,7 +235,7 @@ app.get("/user/inventory", async (req, res) => {
     const userId = getUserIdFromToken(token);
 
     // Utilisez une seule connexion pour effectuer la transaction
-    const conn = await pool.getConnection();
+    const conn = await pool_user.getConnection(); // Utilisez pool_user au lieu de pool
 
     try {
       // Sélectionnez l'inventaire de l'utilisateur depuis la base de données principale
@@ -243,7 +243,7 @@ app.get("/user/inventory", async (req, res) => {
       const inventoryResult = await conn.query(inventoryQuery, [userId]);
 
       // Sélectionnez les détails des cartes de la base de données des cartes
-      const cardDetailsQuery = "SELECT Carte.id, Carte.nom, Carte.description FROM cartes_db.Carte WHERE Carte.id IN (?)";
+      const cardDetailsQuery = "SELECT Carte.id, Carte.name, Carte.desc, Carte.imageUrl FROM projet.Carte WHERE Carte.id IN (?)";
       const cardIds = inventoryResult.map((item) => item.carte_id);
       const cardDetailsResult = await conn.query(cardDetailsQuery, [cardIds]);
 
@@ -259,10 +259,8 @@ app.get("/user/inventory", async (req, res) => {
         };
       });
 
-      // Répondre avec les données de l'inventaire enrichies de détails de carte
       res.status(200).json(inventoryWithDetails);
     } finally {
-      // Assurez-vous de libérer la connexion après utilisation
       if (conn) conn.release();
     }
   } catch (err) {
