@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button  } from "@mui/material";
+import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from "@mui/material";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Importez useNavigate
 
@@ -24,6 +24,7 @@ const AdminPage = () => {
         navigate('/');
       }
     };
+
     fetchData();
   }, [navigate]); // Ajoutez navigate en tant que dépendance pour éviter les avertissements
 
@@ -39,8 +40,6 @@ const AdminPage = () => {
     }
     window.location.reload();
   };
-
-
 
   return (
     <Paper>
@@ -71,11 +70,6 @@ const AdminPage = () => {
                     Delete
                   </Button>
                 </TableCell>
-                <TableCell>
-                  <Button variant="outlined" color="secondary" onClick={() => handleDeleteUser(user.id)}>
-                    Delete
-                  </Button>
-                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -83,7 +77,6 @@ const AdminPage = () => {
       </TableContainer>
     </Paper>
   );
-
 };
 
 export default AdminPage;
