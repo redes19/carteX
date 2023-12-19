@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Container, Typography, TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthProvider";
 
 const useStyles = (theme) => ({
   form: {
@@ -15,17 +16,10 @@ const useStyles = (theme) => ({
 const Connexion = () => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const { isLoggedIn, login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("isLoggedIn") === "true"
-  );
-  const [userName, setUserName] = useState("");
-
-  useEffect(() => {
-    localStorage.setItem("isLoggedIn", isLoggedIn.toString());
-  }, [isLoggedIn]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,8 +35,7 @@ const Connexion = () => {
       localStorage.setItem("userId", userId);
       localStorage.setItem("userName", userName);
 
-      setIsLoggedIn(true);
-      setUserName(userName);
+      login(userName);
 
       // Trigger a navigation to the current page to reload the header
       navigate(window.location.pathname);
@@ -57,7 +50,7 @@ const Connexion = () => {
       {isLoggedIn ? (
         <Typography variant="h2">
           <form onSubmit={handleSubmit}>
-            Vous êtes connecté en tant que :{userName}
+            Vous êtes connecté en tant que : {isLoggedIn}
           </form>
         </Typography>
       ) : (

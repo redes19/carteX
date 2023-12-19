@@ -3,6 +3,7 @@ import Header from "./Front/Component/Header.jsx";
 import Inscription from "./Front/Component/Inscription.jsx";
 import Connection from "./Front/Component/Connection.jsx";
 import AdminPage from "./Front/Component/Admin.jsx";
+import {AuthProvider} from "./Front/Component/AuthProvider.jsx";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
@@ -70,17 +71,20 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <Header />
-        <Routes>
-          <Route path="/Inscription" element={<Inscription />}></Route>
-          <Route path="/Connection" element={<Connection />}></Route>
-          <Route path="/Admin" element={<AdminPage />}></Route>
-        </Routes>
-      </header>
-    </div>
+    <AuthProvider>
+      <div className="App">
+        <header className="App-header">
+          <Header /> {/* Utilisez le composant Header ici */}
+          <Routes>
+            <Route path="/Inscription" element={<Inscription />} />
+            <Route path="/Connection" element={<Connection />} />
+            <Route path="/Admin" element={<AdminPage />} />
+          </Routes>
+        </header>
+      </div>
+    </AuthProvider>
   );
 }
+
 
 export default App;
