@@ -2,6 +2,9 @@ const express = require("express"); // récupération express
 const app = express(); // variable utilisant la librairie express
 const bcrypt = require("bcrypt");
 let cors = require("cors");
+const jwt = require('jsonwebtoken');
+const verifyToken = require('./verifyToken');
+
 require("dotenv").config();
 
 app.use(express.json());
@@ -15,7 +18,7 @@ const pool = mariadb.createPool({
   database: process.env.DB_DTB,
 });
 
-app.get("/user", async (req, res) => {
+app.get("/user",verifyToken,async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -71,6 +74,8 @@ app.post("/user", async (req, res) => {
   }
 });
 
+const secretKey = process.env.JWT_SECRET_KEY; // Récupérer la clé secrète depuis une variable d'environnement
+
 app.post("/login", async (req, res) => {
   let conn;
 
@@ -93,11 +98,24 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Mot de passe incorrect" });
     }
 
-    // Ajouter le nom d'utilisateur à la réponse
+
+    // Créer un token JWT
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        isAdmin: user.isAdmin, 
+      },
+      secretKey,
+      { expiresIn: '1h' } 
+    );
+
+
+    // Ajouter le nom d'utilisateur et le token à la réponse
     res.json({
       message: "Connexion réussie",
       userId: user.id,
       userName: user.nom,
+      token : token,
     });
   } catch (err) {
     console.error("Erreur lors de la connexion:", err);

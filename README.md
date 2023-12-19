@@ -20,6 +20,8 @@ niveau back :
 - npm install cors
 - npm install mariadb
 - npm install bcrypt
+- npm install jsonwebtoken
+
 
 nodemon server.js
 

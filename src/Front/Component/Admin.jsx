@@ -1,32 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button  } from "@mui/material";
+import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from "@mui/material";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Importez useNavigate
 
 const AdminPage = () => {
   const [userData, setUserData] = useState([]);
+  const navigate = useNavigate(); // Initialisez useNavigate
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/user');
+        const response = await axios.get('http://localhost:3001/user', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
         setUserData(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
+
+        // Utilisez navigate pour rediriger l'utilisateur vers la page /
+        navigate('/');
       }
     };
     fetchData();
-  }, []);
+  }, [navigate]); // Ajoutez navigate en tant que dépendance pour éviter les avertissements
 
   const handleDeleteUser = async (userId) => {
     try {
       await axios.delete(`http://localhost:3001/user/${userId}`);
-      // mettre une methode pour refraiche le delete
+      // Mettez une méthode pour rafraîchir la suppression
       setUserData((prevUserData) => prevUserData.filter(user => user.id !== userId));
     } catch (error) {
       console.error('Error deleting user:', error);
+      // Utilisez navigate pour rediriger l'utilisateur vers la page /
+      navigate('/');
     }
     window.location.reload();
   };
+
+
 
   return (
     <Paper>
@@ -42,7 +57,7 @@ const AdminPage = () => {
               <TableCell>Email</TableCell>
               <TableCell>Prénom</TableCell>
               <TableCell>Nom</TableCell>
-              <TableCell>Action</TableCell> 
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -52,6 +67,11 @@ const AdminPage = () => {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.prenom}</TableCell>
                 <TableCell>{user.nom}</TableCell>
+                <TableCell>
+                  <Button variant="outlined" color="secondary" onClick={() => handleDeleteUser(user.id)}>
+                    Delete
+                  </Button>
+                </TableCell>
                 <TableCell>
                   <Button variant="outlined" color="secondary" onClick={() => handleDeleteUser(user.id)}>
                     Delete
