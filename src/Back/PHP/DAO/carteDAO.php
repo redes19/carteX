@@ -11,11 +11,11 @@ class CarteDAO {
 
     public function getCartes(){
         $cartes = array();
-
-        $query = "SELECT * FROM cartes";
+    
+        $query = "SELECT * FROM Carte";
         $result = $this->pdo->query($query);
-
-        while ($row = $result->fetch_assoc()) {
+    
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             $carte = new Carte(
                 $row['id'],
                 $row['name'],
@@ -26,15 +26,16 @@ class CarteDAO {
                 $row['frameType'],
                 $row['cardId']
             );
-
+    
             $cartes[] = $carte;
         }
-
+    
         return $cartes;
     }
+    
 
     public function getCarteById($id){
-        $stmt = $this->pdo->prepare("SELECT * FROM carte WHERE id = :id");
+        $stmt = $this->pdo->prepare("SELECT * FROM Carte WHERE id = :id");
         $stmt->bindParam(':id', $id);
         $stmt->execute();
     
@@ -66,7 +67,7 @@ class CarteDAO {
         $frameType = $carte->getFrameType();
         $cardId = $carte->getCardId();
     
-        $stmt = $this->pdo->prepare("INSERT INTO carte (name, desc, imageUrl, race, type, frameType, cardId) VALUES (:name, :desc, :imageUrl, :race, :type, :frameType, :cardId)");
+        $stmt = $this->pdo->prepare("INSERT INTO Carte (name, desc, imageUrl, race, type, frameType, cardId) VALUES (:name, :desc, :imageUrl, :race, :type, :frameType, :cardId)");
     
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':desc', $desc);
@@ -93,7 +94,7 @@ class CarteDAO {
         $frameType = $carte->getFrameType();
         $cardId = $carte->getCardId();
 
-        $stmt = $this->pdo->prepare("UPDATE carte SET name = :name, des = :desc, imageUrl = :imageUrl, race = :race, type = :type, frameType = :frameType, cardId = :cardId WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE Carte SET name = :name, des = :desc, imageUrl = :imageUrl, race = :race, type = :type, frameType = :frameType, cardId = :cardId WHERE id = :id");
 
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':name', $name);
@@ -109,7 +110,7 @@ class CarteDAO {
     public function deleteCarte(Carte $carte){
         $id = $carte->getId();
     
-        $stmt = $this->pdo->prepare("DELETE FROM carte WHERE id = :id");
+        $stmt = $this->pdo->prepare("DELETE FROM Carte WHERE id = :id");
     
         $stmt->bindParam(':id', $id);
         

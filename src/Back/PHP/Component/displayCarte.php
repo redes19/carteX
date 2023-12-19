@@ -32,7 +32,6 @@ if (!empty($cartes)) {
         <div>
             <h2><?php echo $carte->getName(); ?></h2>
             <p><strong>ID :</strong> <?php echo $carte->getId(); ?></p>
-            <p><strong>Name :</strong> <?php echo $carte->getName(); ?></p>
             <p><strong>Description :</strong> <?php echo $carte->getDesc(); ?></p>
             <p><strong>Image URL :</strong> <?php echo $carte->getImageUrl(); ?></p>
             <p><strong>Race :</strong> <?php echo $carte->getRace(); ?></p>
