@@ -141,7 +141,7 @@ app.post("/login", async (req, res) => {
         isAdmin: user.isAdmin, 
       },
       secretKey,
-      { expiresIn: '1h' } 
+      { expiresIn: '10h' } 
     );
 
 
@@ -275,15 +275,17 @@ app.get("/user/decks/:deckId/cards", async (req, res) => {
   const token = req.headers.authorization.split(' ')[1];
 
   const userId = getUserIdFromToken(token);
+
+  let conn;  // Déclarez la variable `conn` en dehors du bloc try-catch
   
   try {
     // Assurez-vous que la logique d'accès à la base de données est correcte
-    const conn = await pool.getConnection();
+    conn = await pool_user.getConnection();  // Utilisez pool_user au lieu de pool
 
     // Sélectionnez les cartes associées au deck
     const cardsQuery = `
       SELECT Carte.id, Carte.name, Carte.desc, Carte.imageUrl
-      FROM projet.CarteDeck
+      FROM projetUser.CarteDeck
       JOIN projet.Carte ON CarteDeck.carte_id = Carte.id
       WHERE CarteDeck.deck_id = ?;
     `;
@@ -299,6 +301,7 @@ app.get("/user/decks/:deckId/cards", async (req, res) => {
   }
 });
 
+
 app.get("/user/decks", verifyToken, async (req, res) => {
   try {
     const userId = getUserIdFromToken(req.headers.authorization.split(' ')[1]);
@@ -308,7 +311,7 @@ app.get("/user/decks", verifyToken, async (req, res) => {
 
     try {
       // Sélectionnez tous les decks de l'utilisateur depuis la base de données principale
-      const decksQuery = "SELECT * FROM Deck WHERE utilisateur_id = ?";
+      const decksQuery = "SELECT * FROM Deck WHERE user_id = ?";
       const decksResult = await conn.query(decksQuery, [userId]);
 
       res.status(200).json(decksResult);
