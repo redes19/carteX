@@ -27,7 +27,7 @@ const pool_card = mariadb.createPool({
 });
 
 
-app.get("/Utilisateur", async (req, res) => {
+app.get("/user", async (req, res) => {
   let conn;
   console.log("Request GET /Utilisateur");
   try {
@@ -173,38 +173,39 @@ app.get("/cards/:id", async (req, res) => {
 });
 
 app.post("/cards", async (req, res) => {
-  // console.log(req.body)
-  try{
-    let conn = await pool_card.getConnection();
-    console.log("Request POST /cards\n")
+  let conn; // Déplacez la déclaration ici pour qu'elle soit accessible dans le bloc finally
+
+  try {
+    conn = await pool_card.getConnection();
+    console.log("Request POST /cards\n");
 
     req.body.data.forEach(async (card) => {
       const result = await conn.query("SELECT * FROM Carte WHERE cardId = ?", [card.id]);
-      if(result.length == 0){
+      if (result.length == 0) {
         const query = "INSERT INTO Carte (name, `desc`, imageUrl, race, type, frameType, cardId) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        console.log(card.name)
+        console.log(card.name);
         const resultInsert = await conn.query(query, [
-          card.name, 
-          card.desc, 
-          card.card_images[0].image_url, 
-          card.race, 
-          card.type, 
-          card.frameType, 
-          card.id
+          card.name,
+          card.desc,
+          card.card_images[0].image_url,
+          card.race,
+          card.type,
+          card.frameType,
+          card.id,
         ]);
-        console.log(card)
-      }      
-    });    
+        console.log(card);
+      }
+    });
     res.status(200).json("Success");
 
-  }
-  catch(err){
-      console.log("Erreur" + err);
-      // res.status(500).json({ message: "Internal Server Error" });
+  } catch (err) {
+    console.log("Erreur" + err);
+    // res.status(500).json({ message: "Internal Server Error" });
   } finally {
     if (conn) conn.release();
   }
 });
+
 
 
 
