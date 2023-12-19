@@ -3,23 +3,23 @@
 require_once '../Class/carte.php';
 
 class CarteDAO {
-    private $db;
+    private $pdo;
 
-    public function __construct($db){
-        $this->db = $db;
+    public function __construct($pdo){
+        $this->pdo = $pdo;
     }
 
     public function getCartes(){
         $cartes = array();
 
         $query = "SELECT * FROM cartes";
-        $result = $this->db->query($query);
+        $result = $this->pdo->query($query);
 
         while ($row = $result->fetch_assoc()) {
             $carte = new Carte(
                 $row['id'],
                 $row['name'],
-                $row['description'],
+                $row['desc'],
                 $row['imageUrl'],
                 $row['race'],
                 $row['type'],

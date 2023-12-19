@@ -19,7 +19,7 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
 
 
-$carteInstance = new CarteDAO(); 
+$carteInstance = new CarteDAO($pdo); 
 
 // Récupérer les cartes
 $cartes = $carteInstance->getCartes();
