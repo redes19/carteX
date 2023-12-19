@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
 
 const Header = () => {
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, isAdmin, logout } = useAuth();
 
   useEffect(() => {
     // Cette fonction sera appelée chaque fois que l'état d'authentification change
@@ -15,15 +15,17 @@ const Header = () => {
     return (
       <AppBar position="static">
         <Toolbar>
-          <Button color="inherit" component={Link} to="/Admin">
-            Admin
-          </Button>
+          {isAdmin && (
+            <Button color="inherit" component={Link} to="/Admin">
+              Admin
+            </Button>
+          )}
           <Button color="inherit" onClick={logout}>
             Déconnexion
           </Button>
         </Toolbar>
       </AppBar>
-    );
+    )
   } else {
     return (
       <AppBar position="static">
@@ -36,8 +38,8 @@ const Header = () => {
           </Button>
         </Toolbar>
       </AppBar>
-    );
+    )
   }
-};
-
+}
+  
 export default Header;

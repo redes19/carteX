@@ -2,6 +2,9 @@ const express = require("express"); // récupération express
 const app = express(); // variable utilisant la librairie express
 const bcrypt = require("bcrypt");
 let cors = require("cors");
+const jwt = require('jsonwebtoken');
+const verifyToken = require('./verifyToken');
+
 require("dotenv").config();
 
 app.use(express.json());
@@ -17,14 +20,18 @@ const pool = mariadb.createPool({
 
 app.get("/Utilisateur", async (req, res) => {
   let conn;
+  console.log("Route /Utilisateur appelée");
+  console.log("User Data:", req.userData);
+  console.log("User ID:", req.userData.userId);
   try {
     conn = await pool.getConnection();
-    console.log("lancement");
     const rows = await conn.query("SELECT * FROM Utilisateur");
-    console.log(rows);
     res.status(200).json(rows);
   } catch (err) {
     console.error(err);
+    res.status(500).json({ error: "Erreur lors de la récupération des utilisateurs" });
+  } finally {
+    if (conn) conn.release();
   }
 });
 
@@ -69,6 +76,8 @@ app.post("/Utilisateur", async (req, res) => {
   }
 });
 
+const secretKey = process.env.JWT_SECRET_KEY; // Récupérer la clé secrète depuis une variable d'environnement
+
 app.post("/login", async (req, res) => {
   let conn;
 
@@ -85,20 +94,30 @@ app.post("/login", async (req, res) => {
     }
 
     const user = result[0];
-    const passwordMatch = await bcrypt.compare(
-      req.body.password,
-      user.mdp
-    );
+    const passwordMatch = await bcrypt.compare(req.body.password, user.mdp);
 
     if (!passwordMatch) {
       return res.status(401).json({ error: "Mot de passe incorrect" });
     }
 
-    // Ajouter le nom d'utilisateur à la réponse
+
+    // Créer un token JWT
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        isAdmin: user.isAdmin, 
+      },
+      secretKey,
+      { expiresIn: '1h' } 
+    );
+
+
+    // Ajouter le nom d'utilisateur et le token à la réponse
     res.json({
       message: "Connexion réussie",
       userId: user.id,
       userName: user.nom,
+      token : token,
     });
   } catch (err) {
     console.error("Erreur lors de la connexion:", err);
@@ -107,6 +126,7 @@ app.post("/login", async (req, res) => {
     if (conn) conn.release();
   }
 });
+
 
 app.listen(3001, () => {
   console.log("Serveur à l'écoute");

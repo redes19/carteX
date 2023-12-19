@@ -74,7 +74,7 @@ function App() {
     <AuthProvider>
       <div className="App">
         <header className="App-header">
-          <Header /> {/* Utilisez le composant Header ici */}
+          <Header /> 
           <Routes>
             <Route path="/Inscription" element={<Inscription />} />
             <Route path="/Connection" element={<Connection />} />
