@@ -24,7 +24,7 @@ niveau back :
 
 Pour le php :
 
-- require --dev phpunit/phpunit
+- composer require --dev phpunit/phpunit
 
 nodemon server.js
 
