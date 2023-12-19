@@ -16,6 +16,7 @@ const pool_user = mariadb.createPool({
   user: process.env.DB_USER_PROJECTUSER,
   password: process.env.DB_PWD_PROJECTUSER,
   database: process.env.DB_DTB_PROJECTUSER,
+  connectionLimit: 40,
 });
 
 const pool_card = mariadb.createPool({
@@ -37,6 +38,8 @@ app.get("/Utilisateur", async (req, res) => {
     res.status(200).json(rows);
   } catch (err) {
     console.error(err);
+  } finally {
+    if (conn) conn.release();
   }
 });
 
@@ -80,6 +83,8 @@ app.post("/user", async (req, res) => {
     res
       .status(500)
       .json({ error: "Erreur lors de la création de l'utilisateur" });
+  } finally {
+    if (conn) conn.release();
   }
 });
 
@@ -147,6 +152,8 @@ app.get("/cards", async (req, res) => {
     res.status(200).json(rows);
   } catch (err) {
     console.error(err);
+  } finally {
+    if (conn) conn.release();
   }
 });
 
@@ -160,6 +167,8 @@ app.get("/cards/:id", async (req, res) => {
     res.status(200).json(rows);
   } catch (err) {
     console.error(err);
+  } finally {
+    if (conn) conn.release();
   }
 });
 
@@ -192,6 +201,8 @@ app.post("/cards", async (req, res) => {
   catch(err){
       console.log("Erreur" + err);
       // res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    if (conn) conn.release();
   }
 });
 
