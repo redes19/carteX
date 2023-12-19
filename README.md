@@ -32,3 +32,6 @@ style :
 niveau front :
 npm install react-router-dom
 npm install axios
+npm install react-slick --save
+npm install slick-carousel --save
+
