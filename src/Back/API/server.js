@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 let cors = require("cors");
 const jwt = require('jsonwebtoken');
 const verifyToken = require('./verifyToken');
+const getUserIdFromToken = require('./getUserIdFromToken');
 
 require("dotenv").config();
 
@@ -226,6 +227,49 @@ app.post("/cards", async (req, res) => {
   }
 });
 
+
+app.get("/user/inventory", async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+
+    const userId = getUserIdFromToken(token);
+
+    // Utilisez une seule connexion pour effectuer la transaction
+    const conn = await pool.getConnection();
+
+    try {
+      // Sélectionnez l'inventaire de l'utilisateur depuis la base de données principale
+      const inventoryQuery = "SELECT * FROM Inventaire WHERE utilisateur_id = ?";
+      const inventoryResult = await conn.query(inventoryQuery, [userId]);
+
+      // Sélectionnez les détails des cartes de la base de données des cartes
+      const cardDetailsQuery = "SELECT Carte.id, Carte.nom, Carte.description FROM cartes_db.Carte WHERE Carte.id IN (?)";
+      const cardIds = inventoryResult.map((item) => item.carte_id);
+      const cardDetailsResult = await conn.query(cardDetailsQuery, [cardIds]);
+
+      // Associez les détails des cartes avec l'inventaire
+      const inventoryWithDetails = inventoryResult.map((inventoryItem) => {
+        const matchingCard = cardDetailsResult.find((card) => card.id === inventoryItem.carte_id);
+        return {
+          id: inventoryItem.id,
+          utilisateur_id: inventoryItem.utilisateur_id,
+          carte_id: inventoryItem.carte_id,
+          quantite: inventoryItem.quantite,
+          carte_details: matchingCard,
+        };
+      });
+
+      // Répondre avec les données de l'inventaire enrichies de détails de carte
+      res.status(200).json(inventoryWithDetails);
+    } finally {
+      // Assurez-vous de libérer la connexion après utilisation
+      if (conn) conn.release();
+    }
+  } catch (err) {
+    console.error("Error fetching user inventory:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 
 
