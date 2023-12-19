@@ -1,41 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button  } from "@mui/material";
 import axios from 'axios';
-import { useAuth } from "./AuthProvider";
-import { Navigate } from "react-router-dom";
 
 const AdminPage = () => {
   const [userData, setUserData] = useState([]);
-  const { isAdmin } = useAuth();
-
-  const token = localStorage.getItem("token");
-  console.log("Token récupéré avec succès:", token);
-
 
   useEffect(() => {
     const fetchData = async () => {
-      // Vérifiez si l'utilisateur est un administrateur
-      if (!isAdmin) {
-        // Redirigez l'utilisateur vers la page d'accueil s'il n'est pas administrateur
-        return <Navigate to="/" />;
-      }
-
       try {
-        const response = await axios.get('http://localhost:3001/Utilisateur', {
-          // headers: {
-          //   Authorization: `Bearer ${token}`,
-          // },
-        });
-        console.log("Réponse du serveur:", response.data);
-
+        const response = await axios.get('http://localhost:3001/user');
         setUserData(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
-
     fetchData();
-  }, [isAdmin]); // Include isAdmin as a dependency
+  }, []);
+
+  const handleDeleteUser = async (userId) => {
+    try {
+      await axios.delete(`http://localhost:3001/user/${userId}`);
+      // mettre une methode pour refraiche le delete
+      setUserData((prevUserData) => prevUserData.filter(user => user.id !== userId));
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+    window.location.reload();
+  };
 
   return (
     <Paper>
@@ -51,6 +42,7 @@ const AdminPage = () => {
               <TableCell>Email</TableCell>
               <TableCell>Prénom</TableCell>
               <TableCell>Nom</TableCell>
+              <TableCell>Action</TableCell> 
             </TableRow>
           </TableHead>
           <TableBody>
@@ -60,6 +52,11 @@ const AdminPage = () => {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.prenom}</TableCell>
                 <TableCell>{user.nom}</TableCell>
+                <TableCell>
+                  <Button variant="outlined" color="secondary" onClick={() => handleDeleteUser(user.id)}>
+                    Delete
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -67,6 +64,7 @@ const AdminPage = () => {
       </TableContainer>
     </Paper>
   );
+
 };
 
 export default AdminPage;
