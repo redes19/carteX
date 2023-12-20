@@ -1,6 +1,39 @@
 import React from 'react'
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
 
 export default function SearchFilters() {
+    const [alignment, setAlignment] = React.useState('DESC');
+    const handleChange = (event, newAlignment) => {
+        if (newAlignment !== null) {
+            setAlignment(newAlignment);
+        }
+    };
+
+    const calculateValue = (value) => {
+        if(value<1){
+            return value;
+        }else{
+            return Math.round((2 **value) * Math.pow(10, 2 || 0)) / Math.pow(10, 2 || 0);            
+        }
+    }
+
+    const minDistance = 0.10;
+    const [value1, setValue1] = React.useState([0, 50]);
+    const handleChange1 = (event, newValue, activeThumb) => {
+      if (!Array.isArray(newValue)) {
+        return;
+      }
+  
+      if (activeThumb === 0) {
+        setValue1([Math.min(newValue[0], value1[1] - minDistance), value1[1]]);
+      } else {
+        setValue1([value1[0], Math.max(newValue[1], value1[0] + minDistance)]);
+      }
+    };
+
 
     // CHECK IF MAX PRICE IS SUPERIOR TO MIN PRICE and CHECK IF MIN PRICE IS INFERIOR TO MAX PRICE
     let filterMaxPrice = document.getElementById('searchFilters-maxprice');
@@ -26,9 +59,55 @@ export default function SearchFilters() {
   return (
     <div className='searchFilters-container'>
 
-        <div className='searchFilters-name-container'>
-            <label for="searchFilters-name">Chercher par nom uniquement</label>
-            <input type="checkbox" id="searchFilters-name" name="searchFilters-name" value="searchFilters-name"/>
+        <ToggleButtonGroup
+            id='searchFilters-order-container'
+            color="primary"
+            value={alignment}
+            exclusive
+            onChange={handleChange}
+            aria-label="Platform"
+        >   
+          <ToggleButton value="DESC">Descendant</ToggleButton>
+          <ToggleButton value="ASC">Ascendant</ToggleButton>
+        </ToggleButtonGroup>
+        <input type="hidden" id="searchFilters-order" name="searchFilters-order" value={alignment}/>
+
+        <div>Prix : </div>
+        <div className='searchFilters-price-container'>
+            <Box sx={{ width: 300 }}>
+                <Slider
+                    id='searchFilters-distance'
+                    getAriaLabel={() => 'Minimum distance'}
+                    value={value1}
+                    onChange={handleChange1}
+                    valueLabelDisplay="auto"
+                    step={0.01}
+                    min={0}
+                    max={9}
+                    scale={calculateValue}
+                    disableSwap
+                />
+            </Box>
+            <div className='searchFilters-price-shop'>
+                <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="amazonPrice" defaultChecked={true}/>
+                <label for="searchFilters-price-shop">Amazon</label>
+            </div>
+            <div className='searchFilters-price-shop'>
+                <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="cardmarketPrice"/>
+                <label for="searchFilters-price-shop">CardMarket</label>
+            </div>
+            <div className='searchFilters-price-shop'>
+                <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="coolstuffincPrice"/>
+                <label for="searchFilters-price-shop">Cool Stuff Inc</label>
+            </div>
+            <div className='searchFilters-price-shop'>
+                <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="ebayPrice"/>
+                <label for="searchFilters-price-shop">Ebay</label>
+            </div>
+            <div className='searchFilters-price-shop'>
+                <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="tcgplayerPrice"/>
+                <label for="searchFilters-price-shop">TCG Player</label>
+            </div>
         </div>
 
         <div>Type : </div>
@@ -109,51 +188,6 @@ export default function SearchFilters() {
                 <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Link_Effect"/>
                 <label for="searchFilters-type">Link Effect</label>
             </div>
-        </div>
-
-        <div>Prix : </div>
-        <div className='searchFilters-price'>
-            <div className='searchFilters-minprice-container'>
-                <label for="searchFilters-minprice">Prix min</label>
-                <input type="number" id="searchFilters-minprice" name="searchFilters-minprice" min="0" max="10000" defaultValue="0"/>
-            </div>
-            <div className='searchFilters-maxprice-container'>
-                <label for="searchFilters-maxprice">Prix max</label>
-                <input type="number" id="searchFilters-maxprice" name="searchFilters-maxprice" min="0" max="10000" defaultValue="10000"/>
-            </div>
-        </div>
-
-        {/* RARITY IS HARDCODED, AS THERE CAN BE NO MORE NO LESS THAN THOSE LISTED */}
-        {/* <div>Rareté : </div>
-        <div className='searchFilters-rarity-container'>
-            <div className='searchFilters-rarity-radio'>
-                <input type="radio" id="searchFilters-rarity" name="searchFilters-rarity" value="default" defaultChecked={true}/>
-                <label for="searchFilters-rarity">Tout</label>
-            </div>
-            <div className='searchFilters-rarity-radio'>
-                <input type="radio" id="searchFilters-rarity" name="searchFilters-rarity" value="Rarity_1"/>
-                <label for="searchFilters-rarity">Rarity 1</label>
-            </div>
-            <div className='searchFilters-rarity-radio'>
-                <input type="radio" id="searchFilters-rarity" name="searchFilters-rarity" value="Rarity_2"/>
-                <label for="searchFilters-rarity">Rarity 2</label>
-            </div>
-            <div className='searchFilters-rarity-radio'>
-                <input type="radio" id="searchFilters-rarity" name="searchFilters-rarity" value="Rarity_3"/>
-                <label for="searchFilters-rarity">Rarity 3</label>
-            </div>
-            <div className='searchFilters-rarity-radio'>
-                <input type="radio" id="searchFilters-rarity" name="searchFilters-rarity" value="Rarity_4"/>
-                <label for="searchFilters-rarity">Rarity 4</label>
-            </div>
-        </div> */}
-
-        <div className='searchFilters-order-container'>
-            <label for="searchFilters-order">Ordre</label>
-            <select name="searchFilters-order" id="searchFilters-order">
-                <option value="DESC">Descendant</option>
-                <option value="ASC">Ascendant</option>
-            </select>
         </div>
 
     </div>

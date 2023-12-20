@@ -10,15 +10,11 @@ export default function Menu() {
     const [cardList, setCardList] = useState([{}]);
     
     let url;
-  
-  
+    
     // FILTERS 
-  
     let filterName = document.getElementById('searchFilters-name');
     let filterType = document.querySelector("input[name='searchFilters-type']:checked");
-    let filterMaxPrice = document.getElementById('searchFilters-maxprice');
-    let filterMinPrice = document.getElementById('searchFilters-minprice');
-   
+    
     // à traiter
     let filterRarity = document.querySelector("input[name='searchFilters-rarity']:checked");
   
@@ -26,6 +22,9 @@ export default function Menu() {
   
     useEffect(() => {
       const fetchCards= () => {
+        let filterMaxPrice = (document.getElementById('searchFilters-distance').childNodes[2].childNodes[0].value < 1) ? document.getElementById('searchFilters-distance').childNodes[2].childNodes[0].value :  Math.round((2 **document.getElementById('searchFilters-distance').childNodes[2].childNodes[0].value) * Math.pow(10, 2 || 0)) / Math.pow(10, 2 || 0);
+        let filterMinPrice = (document.getElementById('searchFilters-distance').childNodes[3].childNodes[0].value < 1) ? document.getElementById('searchFilters-distance').childNodes[3].childNodes[0].value :  Math.round((2 **document.getElementById('searchFilters-distance').childNodes[3].childNodes[0].value) * Math.pow(10, 2 || 0)) / Math.pow(10, 2 || 0);
+        let shop = document.querySelector("input[name='searchFilters-price-shop']:checked").value;
         let terms;
         let searchBar = document.getElementById('searchBar');
         if(searchBar != null && searchBar.value != ""){
@@ -50,14 +49,14 @@ export default function Menu() {
   
         let minprice;
         if(filterMinPrice != null){
-          minprice = filterMinPrice.value;
+          minprice = filterMinPrice;
         }else{
           minprice = "0";
         }
   
         let maxprice;
         if(filterMaxPrice != null){
-          maxprice = filterMaxPrice.value;
+          maxprice = filterMaxPrice;
         }else{
           maxprice = "10000";
         }
@@ -76,7 +75,7 @@ export default function Menu() {
           order = "desc";
         }
 
-        url="http://localhost:3001/cards/search/"+ name +"/"+ type +"/"+ minprice +"/"+ maxprice +"/"+ rarity +"/"+ order +"/"+ terms;
+        url="http://localhost:3001/cards/search/"+ name +"/"+ type +"/"+ minprice +"/"+ maxprice +"/" + shop + "/" + rarity +"/"+ order +"/"+ terms;
         axios.get(url)
           .then(res => {
             setCardList(res.data);

@@ -284,7 +284,7 @@ app.post("/cards", async (req, res) => {
 
 
 
-app.get("/cards/search/:name/:type/:minprice/:maxprice/:rarity/:order/:terms", async (req, res) => { 
+app.get("/cards/search/:name/:type/:minprice/:maxprice/:shop/:rarity/:order/:terms", async (req, res) => { 
   try{
     let conn = await pool_card.getConnection();
     let query = "SELECT * FROM Carte "; 
@@ -333,18 +333,40 @@ app.get("/cards/search/:name/:type/:minprice/:maxprice/:rarity/:order/:terms", a
       params.push(termsString);
       params.push(termsString);
     }
-
-    // PRICE TBA
-    // if(bool){
-    //   query += "AND price >= ? AND price <= ? ";
-    // }
-    // else{
-    //   query += "WHERE price >= ? AND price <= ? ";
-    //   bool = true;
-    // }
-    // params.push(req.params.minprice);
-    // params.push(req.params.maxprice);
-
+    
+    // GET SHOP AND PRICE
+    if(bool){
+      if(req.params.shop == "amazonPrice"){
+        query += "AND amazonPrice >= ? AND amazonPrice <= ? ";
+      }else if(req.params.shop == "cardmarketPrice"){
+        query += "AND cardmarketPrice >= ? AND cardmarketPrice <= ? ";
+      }else if(req.params.shop == "coolstuffincPrice"){
+        query += "AND coolstuffincPrice >= ? AND coolstuffincPrice <= ? ";
+      }else if(req.params.shop == "ebayPrice"){
+        query += "AND ebayPrice >= ? AND ebayPrice <= ? ";
+      }else if(req.params.shop == "tcgplayerPrice"){
+        query += "AND tcgplayerPrice >= ? AND tcgplayerPrice <= ? ";
+      }
+    }else{
+      if(req.params.shop == "amazonPrice"){
+        query += "WHERE amazonPrice >= ? AND amazonPrice <= ? ";
+        bool = true;
+      }else if(req.params.shop == "cardmarketPrice"){
+        query += "WHERE cardmarketPrice >= ? AND cardmarketPrice <= ? ";
+        bool = true;
+      }else if(req.params.shop == "coolstuffincPrice"){
+        query += "WHERE coolstuffincPrice >= ? AND coolstuffincPrice <= ? ";
+        bool = true;
+      }else if(req.params.shop == "ebayPrice"){
+        query += "WHERE ebayPrice >= ? AND ebayPrice <= ? ";
+        bool = true;
+      }else if(req.params.shop == "tcgplayerPrice"){
+        query += "WHERE tcgplayerPrice >= ? AND tcgplayerPrice <= ? ";
+        bool = true;
+      }
+    }
+    params.push(req.params.maxprice);
+    params.push(req.params.minprice);
 
     // IS THERE A NAME ?
     if(req.params.name != "false"){

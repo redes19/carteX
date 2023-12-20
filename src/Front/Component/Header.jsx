@@ -5,6 +5,8 @@ import { useAuth } from "./AuthProvider";
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 
+import '../../Style/header.css';
+
 const Header = () => {
   const { isLoggedIn, isAdmin, logout } = useAuth();
 
@@ -15,7 +17,7 @@ const Header = () => {
 
   if (isLoggedIn) {
     return (
-      <AppBar position="static">
+      <AppBar position="sticky" >
         <Toolbar>
           <div className='searchBar-container'>
             <Box component="form" sx={{'& > :not(style)': { m: 1, width: '25ch' }, }} noValidate autoComplete="off" >
@@ -35,7 +37,7 @@ const Header = () => {
     )
   } else {
     return (
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar>
           <Button color="inherit" component={Link} to="/Inscription">
             Inscription
