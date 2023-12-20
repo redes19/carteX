@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Créer une instance de la classe Carte
     $carte = new Carte($id, $name, $desc, $imageUrl, $race, $type, $frameType, $cardId);
 
-    $carteInstance = new CarteDAO(); 
+    $carteInstance = new CarteDAO($pdo); 
 
     // Mettre à jour la carte
     $carteInstance->updateCarte($carte);

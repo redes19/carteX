@@ -109,7 +109,7 @@ class CarteDAO {
         $frameType = $carte->getFrameType();
         $cardId = $carte->getCardId();
 
-        $stmt = $this->pdo->prepare("UPDATE Carte SET name = :name, des = :desc, imageUrl = :imageUrl, race = :race, type = :type, frameType = :frameType, cardId = :cardId WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE Carte SET name = :name, `desc` = :desc, imageUrl = :imageUrl, race = :race, type = :type, frameType = :frameType, cardId = :cardId WHERE id = :id");
 
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':name', $name);
