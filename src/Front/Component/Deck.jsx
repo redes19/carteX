@@ -50,12 +50,18 @@ const DeckPage = () => {
   };
 
   const settingsCards = {
-    infinite: true,
+    className: "center",
+
     centerMode: true,
-    slidesToShow: 1,
-    spaceBetween: 1,
+
+    infinite: true,
+
+    centerPadding: "1px",
+
+    slidesToShow: 3,
+
+    speed: 500
   };
-  
 
   return (
     <Grid container spacing={2}>
@@ -72,6 +78,7 @@ const DeckPage = () => {
                 size="small"
                 onClick={() => handleDeckClick(deck.id)}
                 sx={{ color: 'white', border: 'none' }}
+                data-deck-id={deck.id}
               >
                 Voir les cartes
               </Button>
