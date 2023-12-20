@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $carteName = $_POST['carteName'];
 
 
-    $carteInstance = new CarteDAO(); 
+    $carteInstance = new CarteDAO($pdo); 
 
     // Rechercher l'ID de la carte par le nom
     $carteId = $carteInstance->getCarteIdByName($carteName);

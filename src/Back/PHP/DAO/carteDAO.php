@@ -56,7 +56,22 @@ class CarteDAO {
         } else {
             return null; 
         }
-    }    
+    } 
+    
+    public function getCarteIdByName($carteName){
+        $stmt = $this->pdo->prepare("SELECT id FROM Carte WHERE name = :name");
+        $stmt->bindParam(':name', $carteName);
+        $stmt->execute();
+    
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        if ($result) {
+            return $result['id'];
+        } else {
+            return null;
+        }
+    }
+    
 
     public function addCarte(Carte $carte){
         $name = $carte->getName();
