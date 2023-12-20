@@ -29,6 +29,12 @@ const Header = () => {
               Admin
             </Button>
           )}
+          <Button color="inherit" component={Link} to="/Inventaire">
+            Inventaire
+          </Button>
+          <Button color="inherit" component={Link} to="/Deck">
+            Deck
+          </Button>
           <Button color="inherit" onClick={logout}>
             Déconnexion
           </Button>

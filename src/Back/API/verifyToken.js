@@ -3,8 +3,6 @@ const secretKey = process.env.JWT_SECRET_KEY;
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
-  console.log("Received token:", token);
-  console.log("Env variables:", process.env);
 
   if (!token) {
     console.log("Token not provided");
@@ -12,9 +10,7 @@ const verifyToken = (req, res, next) => {
   }
 
   try {
-    console.log("Verifying token with secret key:", secretKey);
     const decodedToken = jwt.verify(token, 'QR)V!6;3gwhnW9vk%76G2?X7=');
-    console.log("Decoded token:", decodedToken);
 
     req.userData = decodedToken;
 

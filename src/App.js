@@ -3,6 +3,8 @@ import Header from "./Front/Component/Header.jsx";
 import Inscription from "./Front/Component/Inscription.jsx";
 import Connection from "./Front/Component/Connection.jsx";
 import AdminPage from "./Front/Component/Admin.jsx";
+import Inventaire from "./Front/Component/Inventaire.jsx";
+import Deck from "./Front/Component/Deck.jsx";
 import {AuthProvider} from "./Front/Component/AuthProvider.jsx";
 import Menu from "./Front/Component/Menu.jsx";
 import "./App.css";
@@ -77,6 +79,8 @@ function App() {
             <Route path="/Inscription" element={<Inscription />} />
             <Route path="/Connection" element={<Connection />} />
             <Route path="/Admin" element={<AdminPage />} />
+            <Route path="/Inventaire" element={<Inventaire />} />
+            <Route path="/Deck" element={<Deck />} />clear
             <Route path="/Menu" element={<Menu />}></Route>
         </Routes>
         </header>
