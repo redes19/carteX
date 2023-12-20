@@ -25,11 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $imageUrl = $_POST['imageUrl'];
     $race = $_POST['race'];
     $type = $_POST['type'];
-    $frameType = $_POST['frameType'];
     $cardId = $_POST['cardId'];
 
     // Créer une instance de la classe Carte
-    $carte = new Carte(null, $name, $desc, $imageUrl, $race, $type, $frameType, $cardId);
+    $carte = new Carte(null, $name, $desc, $imageUrl, $race, $type, $cardId);
 
 
     $carteInstance = new CarteDAO($pdo); 
@@ -59,9 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <label>Type:</label>
     <input type="text" name="type" required><br>
-
-    <label>Type de cadre:</label>
-    <input type="text" name="frameType" required><br>
 
     <label>ID de la carte:</label>
     <input type="text" name="cardId" required><br>

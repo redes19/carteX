@@ -7,17 +7,15 @@ class Carte{
     private $imageUrl;
     private $race;
     private $type;
-    private $frameType;
     private $cardId;
 
-    public function __construct($id, $name, $desc, $imageUrl, $race, $type, $frameType, $cardId){
+    public function __construct($id, $name, $desc, $imageUrl, $race, $type, $cardId){
         $this->id = $id;
         $this->name = $name;
         $this->desc = $desc;
         $this->imageUrl = $imageUrl;
         $this->race = $race;
         $this->type = $type;
-        $this->frameType = $frameType;
         $this->cardId = $cardId;
     }
 
@@ -75,14 +73,6 @@ class Carte{
         $this->type = $type;
     }
 
-    // Getter and Setter for $frameType
-    public function getFrameType(){
-        return $this->frameType;
-    }
-
-    public function setFrameType($frameType){
-        $this->frameType = $frameType;
-    }
 
     // Getter and Setter for $cardId
     public function getCardId(){

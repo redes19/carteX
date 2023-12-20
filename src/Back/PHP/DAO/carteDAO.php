@@ -23,7 +23,6 @@ class CarteDAO {
                 $row['imageUrl'],
                 $row['race'],
                 $row['type'],
-                $row['frameType'],
                 $row['cardId']
             );
     
@@ -49,7 +48,6 @@ class CarteDAO {
                 $result['imageUrl'],
                 $result['race'],
                 $result['type'],
-                $result['frameType'],
                 $result['cardId']
             );
             return $carte;
@@ -79,17 +77,15 @@ class CarteDAO {
         $imageUrl = $carte->getImageUrl();
         $race = $carte->getRace();
         $type = $carte->getType();
-        $frameType = $carte->getFrameType();
         $cardId = $carte->getCardId();
     
-        $stmt = $this->pdo->prepare("INSERT INTO Carte (`name`, `desc`, `imageUrl`, `race`, `type`, `frameType`, `cardId`) VALUES (:name, :desc, :imageUrl, :race, :type, :frameType, :cardId)");
+        $stmt = $this->pdo->prepare("INSERT INTO Carte (`name`, `desc`, `imageUrl`, `race`, `type`, `cardId`) VALUES (:name, :desc, :imageUrl, :race, :type, :cardId)");
     
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':desc', $desc);
         $stmt->bindParam(':imageUrl', $imageUrl);
         $stmt->bindParam(':race', $race);
         $stmt->bindParam(':type', $type);
-        $stmt->bindParam(':frameType', $frameType);
         $stmt->bindParam(':cardId', $cardId);
     
         if ($stmt->execute()) {
@@ -106,10 +102,9 @@ class CarteDAO {
         $imageUrl = $carte->getImageUrl();
         $race = $carte->getRace();
         $type = $carte->getType();
-        $frameType = $carte->getFrameType();
         $cardId = $carte->getCardId();
 
-        $stmt = $this->pdo->prepare("UPDATE Carte SET name = :name, `desc` = :desc, imageUrl = :imageUrl, race = :race, type = :type, frameType = :frameType, cardId = :cardId WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE Carte SET name = :name, `desc` = :desc, imageUrl = :imageUrl, race = :race, type = :type, cardId = :cardId WHERE id = :id");
 
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':name', $name);
@@ -117,7 +112,6 @@ class CarteDAO {
         $stmt->bindParam(':imageUrl', $imageUrl);
         $stmt->bindParam(':race', $race);
         $stmt->bindParam(':type', $type);
-        $stmt->bindParam(':frameType', $frameType);
         $stmt->bindParam(':cardId', $cardId);
         $stmt->execute();
     }

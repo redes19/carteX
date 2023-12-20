@@ -9,9 +9,9 @@
 
 <?php
 // Inclure votre classe Carte ici
-include '../Class/Carte.php'; 
-include '../config.php';
-include '../DAO/carteDAO.php';
+// include '../Class/Carte.php'; 
+// include '../config.php';
+// include '../DAO/carteDAO.php';
 
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
@@ -26,11 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $imageUrl = $_POST['imageUrl'];
     $race = $_POST['race'];
     $type = $_POST['type'];
-    $frameType = $_POST['frameType'];
     $cardId = $_POST['cardId'];
 
     // Créer une instance de la classe Carte
-    $carte = new Carte($id, $name, $desc, $imageUrl, $race, $type, $frameType, $cardId);
+    $carte = new Carte($id, $name, $desc, $imageUrl, $race, $type, $cardId);
 
     $carteInstance = new CarteDAO($pdo); 
 
@@ -42,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!-- Formulaire de modification de carte -->
-<form method="post" action="">
+<form method="post" action="UpdateCarte.php">
     <label>ID de la carte à modifier:</label>
     <input type="text" name="carteId" required><br>
 
@@ -60,9 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <label>Nouveau type:</label>
     <input type="text" name="type" required><br>
-
-    <label>Nouveau type de cadre:</label>
-    <input type="text" name="frameType" required><br>
 
     <label>Nouvel ID de la carte:</label>
     <input type="text" name="cardId" required><br>
