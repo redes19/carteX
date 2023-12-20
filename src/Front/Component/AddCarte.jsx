@@ -25,11 +25,13 @@ function App() {
         // IS THE CARD ALREADY IN THE DATABASE ?
         console.log(formData)
         $.ajax({
-            url: '/src/Back/PHP/component/addCarte.php',
-            method: 'GET',
+            url: 'http://localhost:8000/src/Back/PHP/Component/CheckCarte.php',
+            method: 'POST',
             dataType: 'json',
-            data: { name: formData.name },
+            data: { cardName: formData.name },
+            async: true,
             success: function(response) {
+              console.log(response);
                 if (response.exists) {
                     alert("La carte existe déjà.");
                 } else {    
@@ -45,7 +47,7 @@ function App() {
     
     const handleAddCard = () => {
         $.ajax({
-            url: '/src/Back/PHP/component/addCarte.php', 
+            url: 'http://localhost:8000/src/Back/PHP/Component/addCarte.php', 
             method: 'POST',
             dataType: 'json',
             data: formData,
