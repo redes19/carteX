@@ -30,8 +30,8 @@ style :
 - npm install @mui/icons-material
 
 niveau front :
-npm install react-router-dom
-npm install axios
-npm install react-slick --save
-npm install slick-carousel --save
+- npm install react-router-dom
+- npm install axios
+- npm install react-slick --save
+- npm install slick-carousel --save
 
