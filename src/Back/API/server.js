@@ -361,7 +361,6 @@ app.get("/cards/search/:name/:type/:minprice/:maxprice/:rarity/:order/:terms", a
     // ORDER
     query += "ORDER BY name " + req.params.order ;
     // params.push(req.params.order);
-    console.log(query, params)
     const rows = await conn.query(query, params);
     conn.release();
     res.status(200).json(rows);

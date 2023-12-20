@@ -26,9 +26,6 @@ export default function Menu() {
   
     useEffect(() => {
       const fetchCards= () => {
-        if(filterRarity != null){
-          console.log(filterRarity.value);
-        }
         let terms;
         let searchBar = document.getElementById('searchBar');
         if(searchBar != null && searchBar.value != ""){
@@ -80,9 +77,6 @@ export default function Menu() {
         }
 
         url="http://localhost:3001/cards/search/"+ name +"/"+ type +"/"+ minprice +"/"+ maxprice +"/"+ rarity +"/"+ order +"/"+ terms;
-
-        console.log(rarity)
-        console.log(url);
         axios.get(url)
           .then(res => {
             setCardList(res.data);
