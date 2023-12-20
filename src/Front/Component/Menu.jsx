@@ -15,17 +15,20 @@ export default function Menu() {
     // FILTERS 
   
     let filterName = document.getElementById('searchFilters-name');
-    let filterType = document.getElementById('searchFilters-type');
+    let filterType = document.querySelector("input[name='searchFilters-type']:checked");
     let filterMaxPrice = document.getElementById('searchFilters-maxprice');
     let filterMinPrice = document.getElementById('searchFilters-minprice');
    
     // à traiter
-    let filterRarity = document.getElementById('searchFilters-rarity');
+    let filterRarity = document.querySelector("input[name='searchFilters-rarity']:checked");
   
     let filterOrder = document.getElementById('searchFilters-order');
   
     useEffect(() => {
       const fetchCards= () => {
+        if(filterRarity != null){
+          console.log(filterRarity.value);
+        }
         let terms;
         let searchBar = document.getElementById('searchBar');
         if(searchBar != null && searchBar.value != ""){
@@ -77,7 +80,9 @@ export default function Menu() {
         }
 
         url="http://localhost:3001/cards/search/"+ name +"/"+ type +"/"+ minprice +"/"+ maxprice +"/"+ rarity +"/"+ order +"/"+ terms;
-        console.log(url)
+
+        console.log(rarity)
+        console.log(url);
         axios.get(url)
           .then(res => {
             setCardList(res.data);
@@ -90,8 +95,8 @@ export default function Menu() {
 
   return (
     <>
-    <SearchFilters/>
     <div className="mainPage">
+      <SearchFilters/>
       <div className="mainPage-container">
         <div className="mainPage-container-header">
           {/* HERE BE TITLE OF PAGE : résultat de la recherche/liste de cartes */}

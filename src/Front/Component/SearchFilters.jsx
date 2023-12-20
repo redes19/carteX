@@ -31,15 +31,29 @@ export default function SearchFilters() {
             <input type="checkbox" id="searchFilters-name" name="searchFilters-name" value="searchFilters-name"/>
         </div>
 
+        <div>Type : </div>
         <div className='searchFilters-type-container'>
             {/* TYPES ARE HARDCODED, AS THERE CAN BE NO MORE NO LESS THAN THOSE LISTED */}
-            <label for="searchFilters-type">Type</label>
-            <select name="searchFilters-type" id="searchFilters-type">
-                <option value="default">Aucun filtre</option>
-                <option value="searchFilters-type">searchFilters-type</option>
-                <option value="searchFilters-type">searchFilters-type</option>
-                <option value="searchFilters-type">searchFilters-type</option>
-            </select>
+            <div className='searchFilters-type-radio'>
+                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="default" defaultChecked={true}/>
+                <label for="searchFilters-type">Tout</label>
+            </div>
+            <div className='searchFilters-type-radio'>
+                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Type_1"/>
+                <label for="searchFilters-type">Type 1</label>
+            </div>
+            <div className='searchFilters-type-radio'>
+                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Type_2"/>
+                <label for="searchFilters-type">Type 2</label>
+            </div>
+            <div className='searchFilters-type-radio'>
+                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Type_3"/>
+                <label for="searchFilters-type">Type 3</label>
+            </div>
+            <div className='searchFilters-type-radio'>
+                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Type_4"/>
+                <label for="searchFilters-type">Type 4</label>
+            </div>
         </div>
 
         <div className='searchFilters-price'>
@@ -55,13 +69,26 @@ export default function SearchFilters() {
 
         <div className='searchFilters-rarity-container'>
             {/* RARITY IS HARDCODED, AS THERE CAN BE NO MORE NO LESS THAN THOSE LISTED */}
-            <label for="searchFilters-rarity">Rareté</label>
-            <select name="searchFilters-rarity" id="searchFilters-rarity">
-                <option value="default">Aucun filtre</option>
-                <option value="searchFilters-rarity">searchFilters-rarity1</option>
-                <option value="searchFilters-rarity">searchFilters-rarity2</option>
-                <option value="searchFilters-rarity">searchFilters-rarity3</option>
-            </select>
+            <div className='searchFilters-rarity-radio'>
+                <input type="radio" id="searchFilters-rarity" name="searchFilters-rarity" value="default" defaultChecked={true}/>
+                <label for="searchFilters-rarity">Tout</label>
+            </div>
+            <div className='searchFilters-rarity-radio'>
+                <input type="radio" id="searchFilters-rarity" name="searchFilters-rarity" value="Rarity_1"/>
+                <label for="searchFilters-rarity">Rarity 1</label>
+            </div>
+            <div className='searchFilters-rarity-radio'>
+                <input type="radio" id="searchFilters-rarity" name="searchFilters-rarity" value="Rarity_2"/>
+                <label for="searchFilters-rarity">Rarity 2</label>
+            </div>
+            <div className='searchFilters-rarity-radio'>
+                <input type="radio" id="searchFilters-rarity" name="searchFilters-rarity" value="Rarity_3"/>
+                <label for="searchFilters-rarity">Rarity 3</label>
+            </div>
+            <div className='searchFilters-rarity-radio'>
+                <input type="radio" id="searchFilters-rarity" name="searchFilters-rarity" value="Rarity_4"/>
+                <label for="searchFilters-rarity">Rarity 4</label>
+            </div>
         </div>
 
         <div className='searchFilters-order-container'>
