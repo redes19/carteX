@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $carte = new Carte(null, $name, $desc, $imageUrl, $race, $type, $frameType, $cardId);
 
 
-    $carteInstance = new CarteDAO(); 
+    $carteInstance = new CarteDAO($pdo); 
 
     // Ajouter la carte
     if ($carteInstance->addCarte($carte)) {

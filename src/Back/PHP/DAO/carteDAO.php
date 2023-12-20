@@ -82,7 +82,7 @@ class CarteDAO {
         $frameType = $carte->getFrameType();
         $cardId = $carte->getCardId();
     
-        $stmt = $this->pdo->prepare("INSERT INTO Carte (name, desc, imageUrl, race, type, frameType, cardId) VALUES (:name, :desc, :imageUrl, :race, :type, :frameType, :cardId)");
+        $stmt = $this->pdo->prepare("INSERT INTO Carte (`name`, `desc`, `imageUrl`, `race`, `type`, `frameType`, `cardId`) VALUES (:name, :desc, :imageUrl, :race, :type, :frameType, :cardId)");
     
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':desc', $desc);
