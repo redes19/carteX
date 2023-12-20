@@ -41,7 +41,7 @@ export default function SearchFilters() {
             <div className='searchFilters-type-radio'>
                 <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Type_1"/>
                 <label for="searchFilters-type">Type 1</label>
-            </div>
+            </div> 
             <div className='searchFilters-type-radio'>
                 <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Type_2"/>
                 <label for="searchFilters-type">Type 2</label>
