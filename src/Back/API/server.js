@@ -302,15 +302,15 @@ app.get("/user/decks/:deckId/cards", async (req, res) => {
 });
 
 //ajouter une carte à un deck
-
-app.post("/user/decks/:deckId/:cards", async (req, res) => {
-  const { deckId } = req.params;
-  const { cards } = req.params;
+app.post("/user/decks/:deckId/:cardId", async (req, res) => {
+  const { deckId, cardId } = req.params;
+  console.log("lancement requete post ccarte Deck");
+  console.log("deckID", deckId);
+  console.log("card id", cardId);
   const token = req.headers.authorization.split(' ')[1];
 
   // Utiliser getUserIdFromToken pour obtenir l'ID de l'utilisateur
   const userId = getUserIdFromToken(token);
-  console.log("lancement requete post ccarte Deck"); 
 
   let conn;
 
@@ -319,9 +319,6 @@ app.post("/user/decks/:deckId/:cards", async (req, res) => {
     conn = await pool_user.getConnection();
     console.log("lancement requete post ccarte Deck"); 
 
-    // affiche l'id de la carte et du deck$
-    console.log("deckID",deckId);
-    console.log("card id",req.body.cardId);
     // Vérifier que le deck appartient à l'utilisateur
     const deckOwnershipQuery = `
       SELECT user_id FROM Deck WHERE id = ?;
@@ -340,9 +337,17 @@ app.post("/user/decks/:deckId/:cards", async (req, res) => {
       VALUES (?, ?);
     `;
 
-    const cardsResult = await conn.query(cardsQuery, [deckId, req.body.cardId]);
+    const cardsResult = await conn.query(cardsQuery, [deckId, cardId]);
 
-    res.status(200).json(cardsResult);
+    // Vérifier si cardsResult est un tableau avant d'utiliser la méthode map
+    const serializedResult = Array.isArray(cardsResult)
+      ? cardsResult.map((row) => ({
+          deck_id: Number(row.deck_id),
+          carte_id: Number(row.carte_id),
+        }))
+      : null;
+
+    res.status(200).json(serializedResult);
   } catch (err) {
     console.error("Error adding card to deck:", err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -350,6 +355,9 @@ app.post("/user/decks/:deckId/:cards", async (req, res) => {
     if (conn) conn.release();
   }
 });
+
+
+
 
 
 app.get("/user/decks", verifyToken, async (req, res) => {

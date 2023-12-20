@@ -22,6 +22,7 @@ const InventoryPage = () => {
   const [selectedDeck, setSelectedDeck] = useState('');
   const [decks, setDecks] = useState([]);
   const [newDeckName, setNewDeckName] = useState('');
+  const [hoveredCardId, setHoveredCardId] = useState(null);
 
   // Fetch inventory and decks on component mount
   useEffect(() => {
@@ -60,68 +61,69 @@ const InventoryPage = () => {
 
   // Handle card hover
   const handleCardHover = (card) => {
+    console.log(card); // Affiche toutes les informations de la carte
     setHoveredCard(card);
   };
 
   // Handle card click
-  const handleCardClick = (card) => {
-    setHoveredCard(card);
+  const handleCardClick = async (card) => {
+    const cardID = card.id;
+    console.log(cardID);
+    setHoveredCardId(cardID);
     setAddToDeckDialogOpen(true);
-    return card;
   };
-  
 
   // Handle adding card to deck
-  const handleAddToDeckClick = async () => {
-    try {
-      if (!hoveredCard?.id) {
-        console.error('Card ID is undefined');
-        return;
-      }
+const handleAddToDeckClick = async () => {
+  try {
+    // Utiliser hoveredCardId au lieu de cardId
+    const cardId = hoveredCardId;
+    console.log(cardId);
 
-      cons
-  
-      const card = await handleCardClick();
-  
-      if (selectedDeck === 'createNew') {
-        const response = await axios.post(
-          'http://localhost:3001/user/decks',
-          { name: newDeckName },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-          }
-        );
-        const newDeckId = response.data.insertId;
-  
-        await axios.post(
-          `http://localhost:3001/user/decks/${newDeckId}/${card.id}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-          }
-        );
-      } else {
-        await axios.post(
-          `http://localhost:3001/user/decks/${selectedDeck}/${card.id}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-          }
-        );
-      }
-    } catch (error) {
-      console.error('Error adding card to deck:', error);
-    } finally {
-      setAddToDeckDialogOpen(false);
+    if (!cardId) {
+      console.error('Card ID is undefined');
+      return;
     }
-  };
-  
+
+    if (selectedDeck === 'createNew') {
+      const response = await axios.post(
+        'http://localhost:3001/user/decks',
+        { name: newDeckName },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+      const newDeckId = response.data.insertId;
+
+      await axios.post(
+        `http://localhost:3001/user/decks/${newDeckId}/${cardId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+    } else {
+      await axios.post(
+        `http://localhost:3001/user/decks/${selectedDeck}/${cardId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+    }
+  } catch (error) {
+    console.error('Error adding card to deck:', error);
+  } finally {
+    setAddToDeckDialogOpen(false);
+  }
+};
+
 
   // Handle dialog close
   const handleDialogClose = () => {
