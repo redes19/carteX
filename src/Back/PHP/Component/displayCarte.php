@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulaire d'affichage des cartes</title>
+    <link href="carteX/src/Back/PHP/style.css">
 </head>
 <body>
 
@@ -29,16 +30,17 @@ if (!empty($cartes)) {
     foreach ($cartes as $carte) {
         // Afficher les informations de la carte dans le formulaire
         ?>
-        <div>
-            <h2><?php echo $carte->getName(); ?></h2>
-            <p><strong>ID :</strong> <?php echo $carte->getId(); ?></p>
-            <p><strong>Description :</strong> <?php echo $carte->getDesc(); ?></p>
-            <p><strong>Image URL :</strong> <?php echo $carte->getImageUrl(); ?></p>
-            <p><strong>Race :</strong> <?php echo $carte->getRace(); ?></p>
-            <p><strong>Type :</strong> <?php echo $carte->getType(); ?></p>
-            <p><strong>Frame Type :</strong> <?php echo $carte->getFrameType(); ?></p>
-            <p><strong>Card ID :</strong> <?php echo $carte->getCardId(); ?></p>
-        </div>
+            <div class="carte">
+                <!-- <h2><?php echo $carte->getName(); ?></h2>
+                <p><strong>ID :</strong> <?php echo $carte->getId(); ?></p>
+                <p><strong>Description :</strong> <?php echo $carte->getDesc(); ?></p>
+                <p><strong>Image URL :</strong> <?php echo $carte->getImageUrl(); ?></p>
+                <p><strong>Race :</strong> <?php echo $carte->getRace(); ?></p>
+                <p><strong>Type :</strong> <?php echo $carte->getType(); ?></p>
+                <p><strong>Frame Type :</strong> <?php echo $carte->getFrameType(); ?></p>
+                <p><strong>Card ID :</strong> <?php echo $carte->getCardId(); ?></p> -->
+                <img class="image" src="<?php echo $carte->getImageUrl(); ?>" alt="<?php echo $carte->getName(); ?>" />
+            </div>
         <hr>
         <?php
     }
