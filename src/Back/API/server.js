@@ -270,11 +270,10 @@ app.get("/user/inventory", async (req, res) => {
 
 app.get("/user/decks/:deckId/cards", async (req, res) => {
   const { deckId } = req.params;
-
   const token = req.headers.authorization.split(' ')[1];
 
+  // Utiliser getUserIdFromToken pour obtenir l'ID de l'utilisateur
   getUserIdFromToken(token);
-
   let conn;  
   
   try {
@@ -300,6 +299,7 @@ app.get("/user/decks/:deckId/cards", async (req, res) => {
   }
 });
 
+
 //ajouter une carte à un deck
 app.post("/user/decks/:deckId/:cardId", async (req, res) => {
   const { deckId, cardId } = req.params;
@@ -316,7 +316,6 @@ app.post("/user/decks/:deckId/:cardId", async (req, res) => {
   try {
     // Assurez-vous que la logique d'accès à la base de données est correcte
     conn = await pool_user.getConnection();
-    console.log("lancement requete post ccarte Deck"); 
 
     // Vérifier que le deck appartient à l'utilisateur
     const deckOwnershipQuery = `
@@ -383,7 +382,6 @@ app.get("/user/decks", verifyToken, async (req, res) => {
 });
 
 // ajouter un deck à un utilisateur
-
 app.post("/user/decks", async (req, res) => {
   try {
     const userId = getUserIdFromToken(req.headers.authorization.split(' ')[1]);
@@ -396,7 +394,11 @@ app.post("/user/decks", async (req, res) => {
       const decksQuery = "INSERT INTO Deck (name, user_id) VALUES (?, ?)";
       const decksResult = await conn.query(decksQuery, [req.body.name, userId]);
 
-      res.status(200).json(decksResult);
+      // Récupérer l'ID du dernier deck inséré
+      const newDeckId = Number(decksResult.insertId);
+      console.log("ID du nouveau deck:", newDeckId);
+
+      res.status(200).json({ id: newDeckId });
     } finally {
       // Assurez-vous de libérer la connexion après utilisation
       if (conn) conn.release();
@@ -405,8 +407,9 @@ app.post("/user/decks", async (req, res) => {
     console.error("Error fetching user decks:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
-}
-)
+});
+
+
 
 app.listen(3001, () => {
   console.log("Serveur à l'écoute");

@@ -71,12 +71,10 @@ const InventoryPage = () => {
     setAddToDeckDialogOpen(true);
   };
 
-// Handle adding card to deck
+ // Handle adding card to deck
 const handleAddToDeckClick = async () => {
   try {
-    // Utiliser hoveredCardId au lieu de cardId
     const cardId = hoveredCardId;
-    console.log(cardId);
 
     if (!cardId) {
       console.error('Card ID is undefined');
@@ -94,9 +92,9 @@ const handleAddToDeckClick = async () => {
           },
         }
       );
-      console.log("newDeckId",newDeckId);
-      console.log("cardId",cardId);
-      const newDeckId = response.data.insertId;
+
+      // Récupérer l'ID du nouveau deck à partir de la réponse
+      const newDeckId = response.data.id || response.data.insertId;
 
       // Ajouter la carte au nouveau deck
       await axios.post(
@@ -108,6 +106,9 @@ const handleAddToDeckClick = async () => {
           },
         }
       );
+
+      // Vous pouvez utiliser newDeckId ici ou effectuer d'autres opérations avec l'ID du nouveau deck
+      console.log('ID du dernier deck créé :', newDeckId);
     } else {
       // Ajouter la carte à un deck existant
       await axios.post(
