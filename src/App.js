@@ -43,7 +43,6 @@ function App() {
     let url = "https://db.ygoprodeck.com/api/v7/cardinfo.php/?&num=72&offset=0"; // URL of the API to get the data (external side) - here we get the 300 first cards
     axios.get(url)
       .then((response) => {
-        console.log(response.data);
         loadAPIData(response.data.data);
       })
       .catch((error) => {
@@ -61,8 +60,7 @@ function App() {
         }
       )
       .then((response) => {
-        console.log(response);
-        console.log("Success");
+        console.log("API successfully loaded");
       })
       .catch((error) => {
         console.log("Error2");
