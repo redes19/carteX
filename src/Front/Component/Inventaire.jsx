@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 
 const InventoryPage = () => {
+  // State variables
   const [inventory, setInventory] = useState([]);
   const [hoveredCard, setHoveredCard] = useState(null);
   const [addToDeckDialogOpen, setAddToDeckDialogOpen] = useState(false);
@@ -22,29 +23,7 @@ const InventoryPage = () => {
   const [decks, setDecks] = useState([]);
   const [newDeckName, setNewDeckName] = useState('');
 
-  const handleCardHover = (card) => {
-    setHoveredCard(card);
-  };
-
-  const handleAddToDeckClick = async () => {
-    if (selectedDeck === 'createNew') {
-      // Logique pour créer un nouveau deck ici
-      console.log('Créer un nouveau deck:', newDeckName);
-
-      // Mettez à jour l'état ou effectuez une requête pour créer le nouveau deck
-    } else {
-      // Logique pour ajouter la carte au deck existant ici
-      console.log('Ajouter la carte au deck:', hoveredCard, 'Deck sélectionné:', selectedDeck);
-    }
-
-    setAddToDeckDialogOpen(false);
-  };
-
-  const handleDialogClose = () => {
-    setHoveredCard(null);
-    setAddToDeckDialogOpen(false);
-  };
-
+  // Fetch inventory and decks on component mount
   useEffect(() => {
     const fetchInventory = async () => {
       try {
@@ -53,7 +32,6 @@ const InventoryPage = () => {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
-
         setInventory(response.data);
       } catch (error) {
         console.error('Error fetching inventory:', error);
@@ -62,15 +40,12 @@ const InventoryPage = () => {
 
     const fetchDecks = async () => {
       try {
-        // Fetch decks from the server
         const response = await axios.get('http://localhost:3001/user/decks', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
-
         setDecks(response.data);
-        // Assumez que le premier deck est sélectionné par défaut
         if (response.data.length > 0) {
           setSelectedDeck(response.data[0].id);
         }
@@ -83,6 +58,77 @@ const InventoryPage = () => {
     fetchDecks();
   }, []);
 
+  // Handle card hover
+  const handleCardHover = (card) => {
+    setHoveredCard(card);
+  };
+
+  // Handle card click
+  const handleCardClick = (card) => {
+    setHoveredCard(card);
+    setAddToDeckDialogOpen(true);
+    return card;
+  };
+  
+
+  // Handle adding card to deck
+  const handleAddToDeckClick = async () => {
+    try {
+      if (!hoveredCard?.id) {
+        console.error('Card ID is undefined');
+        return;
+      }
+
+      cons
+  
+      const card = await handleCardClick();
+  
+      if (selectedDeck === 'createNew') {
+        const response = await axios.post(
+          'http://localhost:3001/user/decks',
+          { name: newDeckName },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+        );
+        const newDeckId = response.data.insertId;
+  
+        await axios.post(
+          `http://localhost:3001/user/decks/${newDeckId}/${card.id}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+        );
+      } else {
+        await axios.post(
+          `http://localhost:3001/user/decks/${selectedDeck}/${card.id}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+        );
+      }
+    } catch (error) {
+      console.error('Error adding card to deck:', error);
+    } finally {
+      setAddToDeckDialogOpen(false);
+    }
+  };
+  
+
+  // Handle dialog close
+  const handleDialogClose = () => {
+    setHoveredCard(null);
+    setAddToDeckDialogOpen(false);
+  };
+
   return (
     <Grid container spacing={2}>
       {inventory.map((item) => (
@@ -91,20 +137,20 @@ const InventoryPage = () => {
             src={item.carte_details.imageUrl}
             alt={`Card ${item.carte_id}`}
             style={{ maxWidth: '100%', opacity: 1, cursor: 'pointer' }}
-            onClick={() => setAddToDeckDialogOpen(true)}
+            onClick={() => handleCardClick(item.carte_details)} 
             onMouseEnter={() => handleCardHover(item.carte_details)}
             onMouseLeave={() => handleCardHover(null)}
           />
         </Grid>
       ))}
 
-      {/* Dialog pour ajouter à un deck */}
+      {/* Dialog for adding to a deck */}
       <Dialog open={addToDeckDialogOpen} onClose={handleDialogClose}>
-        <DialogTitle>Ajouter à un deck</DialogTitle>
+        <DialogTitle>Add to Deck</DialogTitle>
         <DialogContent>
-          <p>{hoveredCard && `Nom de la carte: ${hoveredCard.name}`}</p>
+          <p>{hoveredCard && `Card Name: ${hoveredCard.name}`}</p>
           <FormControl fullWidth>
-            <InputLabel id="deck-select-label">Sélectionner un deck</InputLabel>
+            <InputLabel id="deck-select-label">Select a deck</InputLabel>
             <Select
               labelId="deck-select-label"
               id="deck-select"
@@ -116,12 +162,12 @@ const InventoryPage = () => {
                   {deck.name}
                 </MenuItem>
               ))}
-              <MenuItem value="createNew">Créer un nouveau deck</MenuItem>
+              <MenuItem value="createNew">Create a new deck</MenuItem>
             </Select>
           </FormControl>
           {selectedDeck === 'createNew' && (
             <TextField
-              label="Nom du nouveau deck"
+              label="New Deck Name"
               value={newDeckName}
               onChange={(e) => setNewDeckName(e.target.value)}
               fullWidth
@@ -130,8 +176,8 @@ const InventoryPage = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose}>Annuler</Button>
-          <Button onClick={handleAddToDeckClick}>Ajouter au deck</Button>
+          <Button onClick={handleDialogClose}>Cancel</Button>
+          <Button onClick={handleAddToDeckClick}>Add to Deck</Button>
         </DialogActions>
       </Dialog>
     </Grid>
