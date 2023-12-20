@@ -46,7 +46,7 @@ const Inscription = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3001/Utilisateur", {
+      const response = await axios.post("http://localhost:3001/user", {
         email,
         password,
         prenom: firstName,

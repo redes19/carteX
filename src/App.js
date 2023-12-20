@@ -4,6 +4,9 @@ import Inscription from "./Front/Component/Inscription.jsx";
 import Connection from "./Front/Component/Connection.jsx";
 import AddCarte from "./Front/Component/AddCarte.jsx";
 import Carte from "./Front/Component/carte.jsx";
+import AdminPage from "./Front/Component/Admin.jsx";
+import {AuthProvider} from "./Front/Component/AuthProvider.jsx";
+import Menu from "./Front/Component/Menu.jsx";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
@@ -43,7 +46,6 @@ function App() {
     axios
       .get(url)
       .then((response) => {
-        console.log(response.data.data);
         loadAPIData(response.data.data);
       })
       .catch((error) => {
@@ -60,8 +62,7 @@ function App() {
         data: data,
       })
       .then((response) => {
-        console.log(response);
-        console.log("Success");
+        console.log("API successfully loaded");
       })
       .catch((error) => {
         console.log("Error2");
@@ -70,18 +71,23 @@ function App() {
   getAPIData();
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <Header />
-        <Routes>
-          <Route path="/Inscription" element={<Inscription />}></Route>
-          <Route path="/Connection" element={<Connection />}></Route>
+    <AuthProvider>
+      <div className="App">
+        <header className="App-header">
+          <Header /> 
+          <Routes>
+            <Route path="/Inscription" element={<Inscription />} />
+            <Route path="/Connection" element={<Connection />} />
+            <Route path="/Admin" element={<AdminPage />} />
+            <Route path="/Menu" element={<Menu />}></Route>
           <Route path="/carte" element={<Carte />}></Route>
           <Route path="/addCarte" element={<AddCarte />}></Route>
         </Routes>
-      </header>
-    </div>
+        </header>
+      </div>
+    </AuthProvider>
   );
 }
+
 
 export default App;
