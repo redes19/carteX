@@ -17,6 +17,11 @@ const Header = () => {
     return (
       <AppBar position="static">
         <Toolbar>
+          <div className='searchBar-container'>
+            <Box component="form" sx={{'& > :not(style)': { m: 1, width: '25ch' }, }} noValidate autoComplete="off" >
+              <TextField className="searchBar" id="searchBar" label="Recherche" variant="outlined"/>
+            </Box>  
+          </div>
           {isAdmin && (
             <Button color="inherit" component={Link} to="/Admin">
               Admin
@@ -39,10 +44,10 @@ const Header = () => {
             Connection
           </Button>
           <div className='searchBar-container'>
-          <Box component="form" sx={{'& > :not(style)': { m: 1, width: '25ch' }, }} noValidate autoComplete="off" >
-            <TextField className="searchBar" id="searchBar" label="Recherche" variant="outlined"/>
-          </Box>  
-        </div>
+            <Box component="form" sx={{'& > :not(style)': { m: 1, width: '25ch' }, }} noValidate autoComplete="off" >
+              <TextField className="searchBar" id="searchBar" label="Recherche" variant="outlined"/>
+            </Box>  
+          </div>
         </Toolbar>
       </AppBar>
     )
