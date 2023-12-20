@@ -202,17 +202,74 @@ app.post("/cards", async (req, res) => {
     req.body.data.forEach(async (card) => {
       const result = await conn.query("SELECT * FROM Carte WHERE cardId = ?", [card.id]);
       if (result.length == 0) {
-        const query = "INSERT INTO Carte (name, `desc`, imageUrl, race, type, frameType, cardId) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        const resultInsert = await conn.query(query, [
-          card.name,
+        let query = "INSERT INTO Carte (name, `desc`, imageUrl, race, type, cardId";
+        let values = "VALUES (?, ?, ?, ?, ?, ?";
+        let array = [
+          card.name, 
           card.desc,
           card.card_images[0].image_url,
           card.race,
           card.type,
-          card.frameType,
           card.id,
-        ]);
-        console.log(card);
+          ]
+        
+        if(card.card_prices[0].amazon_price != null){
+          query += ", amazonPrice";
+          values += ", ?";
+          array.push(card.card_prices[0].amazon_price);
+        }
+        if(card.card_prices[0].cardmarket_price != null){
+          query += ", cardmarketPrice";
+          values += ", ?";
+          array.push(card.card_prices[0].cardmarket_price);
+        }
+        if(card.card_prices[0].coolstuffinc_price != null){
+          query += ", coolstuffincPrice";
+          values += ", ?";
+          array.push(card.card_prices[0].coolstuffinc_price);
+        }
+        if(card.card_prices[0].ebay_price != null){
+          query += ", ebayPrice";
+          values += ", ?";
+          array.push(card.card_prices[0].ebay_price);
+        }
+        if(card.card_prices[0].tcgplayer_price != null){
+          query += ", tcgplayerPrice";
+          values += ", ?";
+          array.push(card.card_prices[0].tcgplayer_price);
+        }
+        if(card.archetype != null){
+          query += ", archetype";
+          values += ", ?";
+          array.push(card.archetype);
+        }
+        if(card.atk != null){
+          query += ", atk";
+          values += ", ?";
+          array.push(card.atk);
+        }
+        if(card.attribute != null){
+          query += ", `attribute`";
+          values += ", ?";
+          array.push(card.attribute);
+        }
+        if(card.def != null){
+          query += ", def";
+          values += ", ?";
+          array.push(card.def);
+        }
+        if(card.level != null){
+          query += ", level";
+          values += ", ?";
+          array.push(card.level);
+        }
+
+        query += ") ";
+        values += ")";
+        const finalQuery = query + values;
+
+
+        const resultInsert = await conn.query(finalQuery, array);
       }
     });
     res.status(200).json("Success");
