@@ -61,19 +61,17 @@ const InventoryPage = () => {
 
   // Handle card hover
   const handleCardHover = (card) => {
-    console.log(card); // Affiche toutes les informations de la carte
     setHoveredCard(card);
   };
 
   // Handle card click
   const handleCardClick = async (card) => {
     const cardID = card.id;
-    console.log(cardID);
     setHoveredCardId(cardID);
     setAddToDeckDialogOpen(true);
   };
 
-  // Handle adding card to deck
+// Handle adding card to deck
 const handleAddToDeckClick = async () => {
   try {
     // Utiliser hoveredCardId au lieu de cardId
@@ -86,6 +84,7 @@ const handleAddToDeckClick = async () => {
     }
 
     if (selectedDeck === 'createNew') {
+      // Créer un nouveau deck
       const response = await axios.post(
         'http://localhost:3001/user/decks',
         { name: newDeckName },
@@ -95,8 +94,11 @@ const handleAddToDeckClick = async () => {
           },
         }
       );
+      console.log("newDeckId",newDeckId);
+      console.log("cardId",cardId);
       const newDeckId = response.data.insertId;
 
+      // Ajouter la carte au nouveau deck
       await axios.post(
         `http://localhost:3001/user/decks/${newDeckId}/${cardId}`,
         {},
@@ -107,6 +109,7 @@ const handleAddToDeckClick = async () => {
         }
       );
     } else {
+      // Ajouter la carte à un deck existant
       await axios.post(
         `http://localhost:3001/user/decks/${selectedDeck}/${cardId}`,
         {},
@@ -123,6 +126,7 @@ const handleAddToDeckClick = async () => {
     setAddToDeckDialogOpen(false);
   }
 };
+
 
 
   // Handle dialog close

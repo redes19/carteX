@@ -30,7 +30,6 @@ const pool_card = mariadb.createPool({
 
 app.get("/user", verifyToken,async (req, res) => {
   let conn;
-  console.log("Request GET /Utilisateur");
   try {
     conn = await pool_user.getConnection();
     console.log("lancement");

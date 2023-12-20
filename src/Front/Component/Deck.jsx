@@ -9,6 +9,8 @@ import 'slick-carousel/slick/slick-theme.css';
 const DeckPage = () => {
   const [decks, setDecks] = useState([]);
   const [selectedDeck, setSelectedDeck] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchDecks = async () => {
@@ -20,8 +22,11 @@ const DeckPage = () => {
         });
 
         setDecks(response.data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching decks:', error);
+        setError('An error occurred while fetching decks.');
+        setLoading(false);
       }
     };
 
@@ -29,74 +34,69 @@ const DeckPage = () => {
   }, []);
 
   const handleDeckClick = async (deckId) => {
-    if (selectedDeck && selectedDeck.id === deckId) {
-      setSelectedDeck(null);
-    } else {
-      try {
-        const response = await axios.get(`http://localhost:3001/user/decks/${deckId}/cards`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
+    try {
+      const response = await axios.get(`http://localhost:3001/user/decks/${deckId}/cards`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
 
-        setSelectedDeck({
-          id: deckId,
-          cards: response.data,
-        });
-      } catch (error) {
-        console.error('Error fetching deck cards:', error);
-      }
+      setSelectedDeck({
+        id: deckId,
+        cards: response.data,
+      });
+    } catch (error) {
+      console.error('Error fetching deck cards:', error);
+      setError('An error occurred while fetching deck cards.');
     }
   };
 
   const settingsCards = {
-    className: "center",
-
+    className: 'center',
     centerMode: true,
-
-    infinite: true,
-
-    centerPadding: "1px",
-
+    infinite: false, 
+    centerPadding: '1px',
     slidesToShow: 3,
-
-    speed: 500
+    speed: 500,
   };
-
   return (
     <Grid container spacing={2}>
-      {decks.map((deck) => (
-        <Grid item xs={12} key={deck.id}>
-          <Card sx={{ border: 'none', bgcolor: 'transparent' }}>
-            <CardContent>
-              <Typography variant="h6" sx={{ color: 'white' }}>
-                {deck.name}
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button
-                size="small"
-                onClick={() => handleDeckClick(deck.id)}
-                sx={{ color: 'white', border: 'none' }}
-                data-deck-id={deck.id}
-              >
-                Voir les cartes
-              </Button>
-            </CardActions>
-          </Card>
-          {selectedDeck && selectedDeck.id === deck.id && (
-            <Slider {...settingsCards} className="custom-slick-list">
-              {selectedDeck.cards.map((card) => (
-                <Card key={card.id} sx={{ border: 'none', bgcolor: 'transparent' }}>
-                  <CardContent>
-                    <img src={card.imageUrl} alt={card.name} />
-                  </CardContent>
-                </Card>
-              ))}
-            </Slider>
-          )}
-        </Grid>
-      ))}
+      {loading && <div>Loading...</div>}
+      {error && <div>Error: {error}</div>}
+      {!loading &&
+        !error &&
+        decks.map((deck) => (
+          <Grid item xs={12} key={deck.id}>
+            <Card sx={{ border: 'none', bgcolor: 'transparent' }}>
+              <CardContent>
+                <Typography variant="h6" sx={{ color: 'white' }}>
+                  {deck.name}
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button
+                  size="small"
+                  onClick={() => handleDeckClick(deck.id)}
+                  sx={{ color: 'white', border: 'none' }}
+                  data-deck-id={deck.id}
+                >
+                  Voir les cartes
+                </Button>
+              </CardActions>
+            </Card>
+            {selectedDeck && selectedDeck.id === deck.id && (
+              <Slider {...settingsCards} key={deck.id} className="custom-slick-list">
+                {selectedDeck.cards.map((card) => (
+                  <Card key={card.id} sx={{ border: 'none', bgcolor: 'transparent' }}>
+                    <CardContent>
+                      <img src={card.imageUrl} alt={card.name} />
+                    </CardContent>
+                  </Card>
+                ))}
+              </Slider>
+            )}
+          </Grid>
+        ))}
     </Grid>
   );
 };
