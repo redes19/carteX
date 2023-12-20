@@ -130,6 +130,20 @@ class CarteDAO {
             return false;
         }
     }
+
+    public function getAllRaces() {
+        $sql = "SELECT DISTINCT race FROM cartes";
+        $stmt = $this->pdo->query($sql);
+        $races = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        return $races;
+    }
+
+    public function getAllTypes() {
+        $sql = "SELECT DISTINCT type FROM cartes";
+        $stmt = $this->pdo->query($sql);
+        $types = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        return $types;
+    }
     
 
 
