@@ -35,3 +35,5 @@ niveau front :
 - npm install react-slick --save
 - npm install slick-carousel --save
 
+lancer server php:
+php -s localhost:8000
