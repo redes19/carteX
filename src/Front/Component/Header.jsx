@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { Button, AppBar, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 
 const Header = () => {
   const { isLoggedIn, isAdmin, logout } = useAuth();
@@ -36,6 +38,11 @@ const Header = () => {
           <Button color="inherit" component={Link} to="/Connection">
             Connection
           </Button>
+          <div className='searchBar-container'>
+          <Box component="form" sx={{'& > :not(style)': { m: 1, width: '25ch' }, }} noValidate autoComplete="off" >
+            <TextField className="searchBar" id="searchBar" label="Recherche" variant="outlined"/>
+          </Box>  
+        </div>
         </Toolbar>
       </AppBar>
     )

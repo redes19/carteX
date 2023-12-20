@@ -166,9 +166,9 @@ app.get("/cards", async (req, res) => {
   let conn;
   try {
     conn = await pool_card.getConnection();
-    console.log("Request GET /cards");
+    // console.log("Request GET /cards");
     const rows = await conn.query("SELECT * FROM Carte");
-    console.log(rows);
+    conn.release();
     res.status(200).json(rows);
   } catch (err) {
     console.error(err);
@@ -181,9 +181,9 @@ app.get("/cards/:id", async (req, res) => {
   let conn;
   try {
     conn = await pool_card.getConnection();
-    console.log("Request GET /cards/:id");
+    // console.log("Request GET /cards/:id");
     const rows = await conn.query("SELECT * FROM Carte WHERE id = ?", [req.params.id]);
-    console.log(rows);
+    conn.release();
     res.status(200).json(rows);
   } catch (err) {
     console.error(err);
@@ -197,13 +197,12 @@ app.post("/cards", async (req, res) => {
 
   try {
     conn = await pool_card.getConnection();
-    console.log("Request POST /cards\n");
+    // console.log("Request POST /cards\n");
 
     req.body.data.forEach(async (card) => {
       const result = await conn.query("SELECT * FROM Carte WHERE cardId = ?", [card.id]);
       if (result.length == 0) {
         const query = "INSERT INTO Carte (name, `desc`, imageUrl, race, type, frameType, cardId) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        console.log(card.name);
         const resultInsert = await conn.query(query, [
           card.name,
           card.desc,
@@ -226,6 +225,94 @@ app.post("/cards", async (req, res) => {
   }
 });
 
+
+
+app.get("/cards/search/:name/:type/:minprice/:maxprice/:rarity/:order/:terms", async (req, res) => { 
+  try{
+    let conn = await pool_card.getConnection();
+    let query = "SELECT * FROM Carte "; 
+    let params = [];
+    let bool = false;
+    let terms = "";
+
+    // IS THERE A TYPE ?  
+    if(req.params.type != "default"){
+      if(bool){
+        query += "AND type LIKE ? ";
+      }
+      else{
+        query += "WHERE type LIKE ? ";
+        bool = true;
+      }
+      params.push("%" + req.params.type + "%");
+    }
+    
+    // IS THERE A RARITY GIVEN ?
+    if(req.params.rarity != "default"){
+      if(bool){
+        query += "AND rarity LIKE ? ";
+      }
+      else{
+        query += "WHERE rarity LIKE ? ";
+        bool = true;
+      }
+      params.push("%" + req.params.rarity + "%");
+    }
+
+    // ARE THERE SEARCHTERMS ?
+    if(req.params.terms != "nosearch"){
+      if(bool){
+        query += "AND (name LIKE ? OR `desc` LIKE ?) ";
+      }
+      else{
+        query += "WHERE (name LIKE ? OR `desc` LIKE ?) ";
+        bool = true;
+      }
+      terms = req.params.terms.split(" ");
+      let termsString = "";
+      terms.forEach((term) => {
+        termsString += "%" + term + "%";
+      });
+      params.push(termsString);
+      params.push(termsString);
+    }
+
+    // PRICE TBA
+    // if(bool){
+    //   query += "AND price >= ? AND price <= ? ";
+    // }
+    // else{
+    //   query += "WHERE price >= ? AND price <= ? ";
+    //   bool = true;
+    // }
+    // params.push(req.params.minprice);
+    // params.push(req.params.maxprice);
+
+
+    // IS THERE A NAME ?
+    if(req.params.name != "false"){
+      if(bool){
+        query += "AND name LIKE ? ";
+      }
+      else{
+        query += "WHERE name LIKE ? ";
+        bool = true;
+      }
+      params.push("%" + terms + "%");
+    }
+
+    // ORDER
+    query += "ORDER BY name " + req.params.order ;
+    // params.push(req.params.order);
+    console.log(query, params)
+    const rows = await conn.query(query, params);
+    conn.release();
+    res.status(200).json(rows);
+  }
+  catch (err){
+    console.log("Erreur " + err);
+  }
+});
 
 
 
