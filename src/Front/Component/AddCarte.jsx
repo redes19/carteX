@@ -24,14 +24,14 @@ function App() {
     const handleCheckCard = () => {
         // Ajouter la logique pour vérifier si la carte existe déjà
         $.ajax({
-            url: '../../Back/PHP/DisplayCarte.php',
-            method: 'POST',
+            url: '/src/Back/PHP/component/addCarte.php',
+            method: 'GET',
             dataType: 'json',
             data: { name: formData.name },
             success: function(response) {
                 if (response.exists) {
                     alert("La carte existe déjà.");
-                } else {
+                } else {    
                     // La carte n'existe pas, procéder à l'ajout
                     handleAddCard();
                 }
@@ -41,11 +41,10 @@ function App() {
             }
         });
     };
-
+    
     const handleAddCard = () => {
-
         $.ajax({
-            url: '../../Back/PHP/addCarte.php',
+            url: '/src/Back/PHP/component/addCarte.php', 
             method: 'POST',
             dataType: 'json',
             data: formData,
@@ -57,6 +56,7 @@ function App() {
             }
         });
     };
+    
 
     const handleSubmit = (e) => {
         e.preventDefault();
