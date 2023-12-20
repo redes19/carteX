@@ -22,7 +22,8 @@ function App() {
     };
 
     const handleCheckCard = () => {
-        // Ajouter la logique pour vérifier si la carte existe déjà
+        // IS THE CARD ALREADY IN THE DATABASE ?
+        console.log(formData)
         $.ajax({
             url: '/src/Back/PHP/component/addCarte.php',
             method: 'GET',
@@ -49,6 +50,7 @@ function App() {
             dataType: 'json',
             data: formData,
             success: function(response) {
+              // CARD ADDED, SHOW ALERT AND REDIRECT
                 console.log(response);      
             },
             error: function(error) {
@@ -61,7 +63,7 @@ function App() {
     const handleSubmit = (e) => {
         e.preventDefault();
         
-        // Vérifiez d'abord si la carte existe
+        // CHECK IF CARD ALREADY EXIST 
         handleCheckCard();
     };
 
