@@ -7,8 +7,10 @@ import Carte from "./Front/Component/carte.jsx";
 import AdminPage from "./Front/Component/Admin.jsx";
 import Inventaire from "./Front/Component/Inventaire.jsx";
 import Deck from "./Front/Component/Deck.jsx";
+import CardsPanel from "./Front/Component/CardsPanel.jsx";
 import {AuthProvider} from "./Front/Component/AuthProvider.jsx";
 import Menu from "./Front/Component/Menu.jsx";
+import ModifyCard from "./Front/Component/ModifyCard.jsx";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import axios from "axios";
@@ -84,8 +86,10 @@ function App() {
             <Route path="/Inventaire" element={<Inventaire />} />
             <Route path="/Deck" element={<Deck />} />clear
             <Route path="/" element={<Menu />}></Route>
-          <Route path="/carte" element={<Carte />}></Route>
-          <Route path="/addCard" element={<AddCarte />}></Route>
+            <Route path="/carte" element={<Carte />}></Route>
+            <Route path="/addCard" element={<AddCarte />}></Route>
+            <Route path="/CardsPanel" element={<CardsPanel />}></Route>
+            <Route path="/modifyCard/:id" element={<ModifyCard/>} />
         </Routes>
         </header>
       </div>

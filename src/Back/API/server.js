@@ -284,7 +284,7 @@ app.post("/cards", async (req, res) => {
     res.status(200).json("Success");
 
   } catch (err) {
-    console.log("Erreur" + err);
+    console.log("Erreur : " + err);
     // res.status(500).json({ message: "Internal Server Error" });
   } finally {
     if (conn) conn.release();
@@ -582,7 +582,7 @@ app.get("/cards/search/:name/:type/:minprice/:maxprice/:shop/:rarity/:order/:ter
     res.status(200).json(rows);
   }
   catch (err){
-    console.log("Erreur " + err);
+    console.log("Erreur :" + err);
   }
 });
 

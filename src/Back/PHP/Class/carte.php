@@ -19,7 +19,9 @@ class Carte{
     private $def;
     private $level;
 
-    public function __construct($name, $desc, $imageUrl, $race, $type, $cardId, $amazonPrice, $cardmarketPrice, $coolstuffincPrice, $ebayPrice, $tcgplayerPrice, $archetype, $atk, $attribute, $def, $level) {
+    public function __construct($name, $desc, $imageUrl, $race, $type, $cardId, $amazonPrice, 
+                                $cardmarketPrice, $coolstuffincPrice, $ebayPrice, $tcgplayerPrice, 
+                                $archetype, $atk, $attribute, $def, $level) {
         $this->name = $name;
         $this->desc = $desc;
         $this->imageUrl = $imageUrl;
