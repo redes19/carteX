@@ -3,6 +3,7 @@ import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHe
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+
 const AdminPage = () => {
   const [userData, setUserData] = useState([]);
   const navigate = useNavigate();

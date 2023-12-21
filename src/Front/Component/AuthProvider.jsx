@@ -29,14 +29,14 @@ const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, {
     isLoggedIn: localStorage.getItem("isLoggedIn") === "true",
     userName: localStorage.getItem("userName") || null,
-    isAdmin: localStorage.getItem("isAdmin") === "true", // Parse as boolean
+    isAdmin: Number(localStorage.getItem("isAdmin")) === 1, // Parse as boolean
   });
 
   useEffect(() => {
     console.log("Auth State Updated:", state);
     localStorage.setItem("isLoggedIn", state.isLoggedIn.toString());
     localStorage.setItem("userName", state.userName || "");
-    localStorage.setItem("isAdmin", state.isAdmin.toString());
+    localStorage.setItem("isAdmin", state.isAdmin ? "1" : "0");
   }, [state]);
 
   const login = (userName, token, isAdmin) => {
