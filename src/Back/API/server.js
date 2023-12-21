@@ -149,6 +149,7 @@ app.post("/login", async (req, res) => {
       message: "Connexion réussie",
       userId: user.id,
       userName: user.nom,
+      isAdmin: user.isAdmin,
       token : token,
     });
   } catch (err) {
