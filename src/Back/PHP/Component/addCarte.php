@@ -15,4 +15,41 @@ if (isset($_POST["name"])) {
 
     echo json_encode(array('name' => $name));
 }
+// CHECK CARD NAME
+if (isset($_POST["checkName"])) {
+    $checkName = $_POST["checkName"];
+
+    $carteDAO = new CarteDAO($pdo);
+    
+    // Vérifiez si la carte existe déjà dans la base de données
+    $carte = $carteDAO->getCarteIdByName($checkName);
+
+    if ($carte !== null) {
+        // La carte existe déjà
+        echo json_encode(array('exists' => true));
+    } else {
+        // La carte n'existe pas
+        echo json_encode(array('exists' => false));
+    }
+}
+
+// CHECK CARD ID    
+if (isset($_POST["checkCardId"])) {
+    $checkCardId = $_POST["checkCardId"];
+
+    $carteDAO = new CarteDAO($pdo);
+    
+    // Vérifiez si la carte existe déjà dans la base de données
+    $carte = $carteDAO->getCarteIdByCardId($checkCardId);
+
+    if ($carte !== null) {
+        // La carte existe déjà
+        echo json_encode(array('exists' => true));
+    } else {
+        // La carte n'existe pas
+        echo json_encode(array('exists' => false));
+    }
+}
+
+
 ?>
