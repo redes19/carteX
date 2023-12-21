@@ -58,6 +58,28 @@ const DeckPage = () => {
     }
   };
 
+  const deleteDeck = async (deckId) => {
+    try {
+      await axios.delete(`http://localhost:3001/user/decks/${deckId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      // Mettre à jour la liste des decks après la suppression
+      setDecks((prevDecks) => prevDecks.filter((deck) => deck.id !== deckId));
+  
+      // Réinitialisez selectedDeck après la suppression
+      if (selectedDeck && selectedDeck.id === deckId) {
+        setSelectedDeck(null);
+      }
+    } catch (error) {
+      console.error('Error deleting deck:', error);
+      setError('An error occurred while deleting the deck.');
+    }
+  };
+  
+
   const settingsCards = {
     className: 'center',
     centerMode: true,
@@ -88,6 +110,13 @@ const DeckPage = () => {
                   data-deck-id={deck.id}
                 >
                   Voir les cartes
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => deleteDeck(deck.id)}
+                  sx={{ color: 'red', border: 'none' }}
+                >
+                  Supprimer
                 </Button>
               </CardActions>
             </Card>
