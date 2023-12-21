@@ -8,7 +8,6 @@ src/Back/PHP/composer.lock
 src/Back/PHP/vendor
 package-lock.json
 package.json
-.gitignore
 
 .pnp.js
 
