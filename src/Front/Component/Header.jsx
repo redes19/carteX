@@ -27,9 +27,14 @@ const Header = () => {
             Menu
           </Button>
           {isAdmin !== undefined && isAdmin && (
+            <>
             <Button color="inherit" component={Link} to="/Admin">
               Admin
             </Button>
+            <Button color="inherit" component={Link} to="/addCard">
+              Add card
+            </Button>
+            </>
           )}
           <Button color="inherit" component={Link} to="/Inventaire">
             Inventaire

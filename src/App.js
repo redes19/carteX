@@ -85,7 +85,7 @@ function App() {
             <Route path="/Deck" element={<Deck />} />clear
             <Route path="/" element={<Menu />}></Route>
           <Route path="/carte" element={<Carte />}></Route>
-          <Route path="/addCarte" element={<AddCarte />}></Route>
+          <Route path="/addCard" element={<AddCarte />}></Route>
         </Routes>
         </header>
       </div>
