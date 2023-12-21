@@ -1,5 +1,5 @@
-const express = require("express"); // récupération express
-const app = express(); // variable utilisant la librairie express
+const express = require("express");
+const app = express();
 const bcrypt = require("bcrypt");
 let cors = require("cors");
 const jwt = require("jsonwebtoken");
@@ -11,6 +11,7 @@ require("dotenv").config();
 app.use(express.json());
 app.use(cors());
 
+// database connection
 const mariadb = require("mariadb");
 const pool_user = mariadb.createPool({
   host: process.env.DB_HOST_PROJECTUSER,
