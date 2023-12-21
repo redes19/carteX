@@ -90,23 +90,30 @@ app.post("/user", async (req, res) => {
 
 // delete user
 
-app.delete("/user/:id",verifyToken, async (req, res) => {
+app.delete("/user/:id", verifyToken, async (req, res) => {
   let conn;
   try {
     conn = await pool_user.getConnection();
     console.log("Request DELETE /user/:id");
-    const rows = await conn.query("DELETE FROM Utilisateur WHERE id = ?", [
+    const result = await conn.query("DELETE FROM Utilisateur WHERE id = ?", [
       req.params.id,
     ]);
-    console.log(rows);
-    res.status(200).json(rows);
+
+    if (result.affectedRows > 0) {
+      // La suppression a réussi
+      res.status(200).json({ success: true });
+    } else {
+      // Aucune ligne n'a été affectée, l'utilisateur n'a peut-être pas été trouvé
+      res.status(404).json({ success: false, error: "User not found" });
+    }
   } catch (err) {
     console.error(err);
+    res.status(500).json({ success: false, error: "Internal server error" });
   } finally {
     if (conn) conn.release();
   }
-}
-);
+});
+
 
 const secretKey = process.env.JWT_SECRET_KEY; // Récupérer la clé secrète depuis une variable d'environnement
 
