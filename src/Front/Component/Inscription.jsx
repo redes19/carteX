@@ -1,27 +1,22 @@
-import React, { useState } from "react";
 import axios from "axios";
+import React, { useState } from "react";
 import {
   Container,
   Typography,
   TextField,
   Button,
-  makeStyles,
-} from "@material-ui/core";
+  FormHelperText,
+} from "@mui/material";
 
-const useStyles = makeStyles((theme) => ({
+
+const useStyles = (theme) => ({
   form: {
     display: "flex",
     flexDirection: "column",
     maxWidth: "300px",
     margin: "auto",
   },
-  textField: {
-    marginBottom: theme.spacing(2),
-  },
-  button: {
-    marginTop: theme.spacing(2),
-  },
-}));
+});
 
 const Inscription = () => {
   const classes = useStyles();
@@ -30,12 +25,28 @@ const Inscription = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState(""); 
+  const [passwordError, setPasswordError] = useState("");
+
+  const handleChangePassword = (event) => {
+    const regex = /(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/;
+    const isValidPassword = regex.test(event.target.value);
+
+    if (!isValidPassword) {
+      setPasswordError(
+        "Le mot de passe doit contenir au moins 1 majuscule, 1 chiffre et au moins 8 caractères"
+      );
+    } else {
+      setPasswordError("");
+    }
+    setPassword(event.target.value);
+  };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3001/Utilisateurs", {
+      const response = await axios.post("http://localhost:3001/user", {
         email,
         password,
         prenom: firstName,
@@ -57,6 +68,14 @@ const Inscription = () => {
     setLastName(""); 
   };
 
+  const isFormValid = () => {
+    return email.trim() !== "" &&
+      password.trim() !== "" &&
+      firstName.trim() !== "" &&
+      lastName.trim() !== "" &&
+      !passwordError;
+  };
+
   return (
     <Container>
       <Typography variant="h2">Inscription</Typography>
@@ -68,13 +87,16 @@ const Inscription = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <TextField
+         <TextField
           className={classes.textField}
           label="Mot de passe"
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handleChangePassword}
         />
+        {passwordError && (
+          <FormHelperText error>{passwordError}</FormHelperText>
+        )}
         <TextField
           className={classes.textField}
           label="Prénom"
@@ -94,6 +116,8 @@ const Inscription = () => {
           variant="contained"
           color="primary"
           type="submit"
+          disabled={!isFormValid()}
+
         >
           S'inscrire
         </Button>
