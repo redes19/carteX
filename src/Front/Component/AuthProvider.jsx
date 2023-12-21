@@ -23,12 +23,13 @@ const authReducer = (state, action) => {
       return state;
   }
 };
+
 const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [state, dispatch] = useReducer(authReducer, {
     isLoggedIn: localStorage.getItem("isLoggedIn") === "true",
     userName: localStorage.getItem("userName") || null,
-    isAdmin: localStorage.getItem("isAdmin") === "true",
+    isAdmin: localStorage.getItem("isAdmin") === "true", // Parse as boolean
   });
 
   useEffect(() => {
@@ -39,15 +40,12 @@ const AuthProvider = ({ children }) => {
   }, [state]);
 
   const login = (userName, token, isAdmin) => {
-    isAdmin = true;
     dispatch({ type: "LOGIN", payload: { userName, isAdmin: isAdmin || false } });
 
     console.log("Isadmin:", isAdmin);
 
-
-
     localStorage.setItem("token", token);
-    navigate("/Admin");
+    navigate("/");
   };
 
   const logout = () => {
