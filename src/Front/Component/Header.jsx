@@ -132,6 +132,9 @@ const Header = () => {
             <Button color="inherit" component={Link} to="/addCard">
               Add card
             </Button>
+            <Button color="inherit" component={Link} to="/CardsPanel">
+              Cards Panel
+            </Button>
             </>
           )}
           <Button color="inherit" component={Link} to="/Inventaire">
