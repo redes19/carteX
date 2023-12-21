@@ -1,51 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from "@mui/material";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Importez useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const AdminPage = () => {
   const [userData, setUserData] = useState([]);
-  const navigate = useNavigate(); // Initialisez useNavigate
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/user', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-
-        setUserData(response.data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-
-        // Utilisez navigate pour rediriger l'utilisateur vers la page /
-        navigate('/');
-      }
-    };
-
-    fetchData();
-  }, [navigate]); // Ajoutez navigate en tant que dépendance pour éviter les avertissements
-
-  const handleDeleteUser = async (userId) => {
+  const fetchData = async () => {
     try {
-      // Supprimer l'utilisateur du serveur
-      await axios.delete(`http://localhost:3001/user/${userId}`, {
+      const response = await axios.get('http://localhost:3001/user', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-  
-      // Mettre à jour l'état local (userData) sans attendre une réponse du serveur
-      setUserData((prevUserData) => prevUserData.filter(user => user.id !== userId));
+
+      setUserData(response.data);
     } catch (error) {
-      console.error('Error deleting user:', error);
-  
-      // Utilisez navigate pour rediriger l'utilisateur vers la page /
+      console.error('Error fetching user data:', error);
+
       navigate('/');
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [navigate]);
+
+const handleDeleteUser = async (userId) => {
+  try {
+    const response = await axios.delete(`http://localhost:3001/user/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+
+    console.log('API Response:', response.data);
+
+    if (response.data.success) {
+      fetchData();
+    } else {
+      console.error('Error deleting user:', response.data.error);
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    navigate('/');
+  }
+};
+
   
 
   return (
