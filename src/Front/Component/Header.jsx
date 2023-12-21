@@ -23,6 +23,9 @@ const Header = () => {
               <TextField className="searchBar" id="searchBar" label="Recherche" variant="outlined"/>
             </Box>  
           </div>
+          <Button color="inherit" component={Link} to="/">
+            Menu
+          </Button>
           {isAdmin !== undefined && isAdmin && (
             <Button color="inherit" component={Link} to="/Admin">
               Admin
@@ -44,6 +47,9 @@ const Header = () => {
     return (
       <AppBar position="sticky" className="header-appbar" >
         <Toolbar>
+        <Button color="inherit" component={Link} to="/">
+            Menu
+          </Button>
           <Button color="inherit" component={Link} to="/Inscription">
             Inscription
           </Button>
