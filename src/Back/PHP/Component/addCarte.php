@@ -46,40 +46,50 @@ if (isset($_POST["submitCard"])) {
 
 
 // CHECK CARD NAME
+// Check if the "checkName" parameter is set in the POST request
 if (isset($_POST["checkName"])) {
+    // Get the value of "checkName" from the POST data
     $checkName = $_POST["checkName"];
 
+    // Create an instance of the CarteDAO class, assuming it's defined and accessible
     $carteDAO = new CarteDAO($pdo);
     
-    // Vérifiez si la carte existe déjà dans la base de données
+    // Check if the card with the specified name exists in the database
     $carte = $carteDAO->getCarteIdByName($checkName);
 
+    // Respond with JSON based on whether the card exists or not
     if ($carte !== null) {
-        // La carte existe déjà
+        // The card exists
         echo json_encode(array('exists' => true));
     } else {
-        // La carte n'existe pas
+        // The card doesn't exist
         echo json_encode(array('exists' => false));
     }
 }
+
 
 // CHECK CARD ID    
+// Check if the "checkCardId" parameter is set in the POST request
 if (isset($_POST["checkCardId"])) {
+    // Get the value of "checkCardId" from the POST data
     $checkCardId = $_POST["checkCardId"];
 
+    // Create an instance of the CarteDAO class, assuming it's defined and accessible
     $carteDAO = new CarteDAO($pdo);
     
-    // Vérifiez si la carte existe déjà dans la base de données
+    // Check if the card with the specified card ID exists in the database
     $carte = $carteDAO->getCarteIdByCardId($checkCardId);
 
+    // Respond with JSON based on whether the card exists or not
     if ($carte !== null) {
-        // La carte existe déjà
+        // The card exists
         echo json_encode(array('exists' => true));
     } else {
-        // La carte n'existe pas
+        // The card doesn't exist
         echo json_encode(array('exists' => false));
     }
 }
+
 
 
 ?>
