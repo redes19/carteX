@@ -85,24 +85,79 @@ class CarteDAO {
     }
     
 
-    public function addCarte(Carte $carte){
-        $name = $carte->getName();
-        $desc = $carte->getDesc();
-        $imageUrl = $carte->getImageUrl();
-        $race = $carte->getRace();
-        $type = $carte->getType();
-        $cardId = $carte->getCardId();
-    
-        $stmt = $this->pdo->prepare("INSERT INTO Carte (`name`, `desc`, `imageUrl`, `race`, `type`, `cardId`) VALUES (:name, :desc, :imageUrl, :race, :type, :cardId)");
-    
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':desc', $desc);
-        $stmt->bindParam(':imageUrl', $imageUrl);
-        $stmt->bindParam(':race', $race);
-        $stmt->bindParam(':type', $type);
-        $stmt->bindParam(':cardId', $cardId);
-    
-        if ($stmt->execute()) {
+    public function addCarte(Carte $card){        
+        $query = "INSERT INTO Carte (name, `desc`, imageUrl, race, type, cardId";
+        $values = "VALUES (?, ?, ?, ?, ?, ?";
+        $array = [
+          $card->getName(), 
+          $card->getDesc(),
+          $card->getImageUrl(),
+          $card->getRace(),
+          $card->getType(),
+          $card->getCardId(),
+            ];
+        
+        if($card->getAmazonPrice() != null){
+            $query .= ", amazonPrice";
+            $values .= ", ?";
+            array_push($array, $card->getAmazonPrice());
+        }
+        if($card->getCardmarketPrice() != null){
+            $query .= ", cardmarketPrice";
+            $values .= ", ?";
+            array_push($array, $card->getCardmarketPrice());
+        }
+        if($card->getCoolstuffincPrice() != null){
+            $query .= ", coolstuffincPrice";
+            $values .= ", ?";
+            array_push($array, $card->getCoolstuffincPrice());
+        }
+        if($card->getEbayPrice() != null){
+            $query .= ", ebayPrice";
+            $values .= ", ?";
+            array_push($array, $card->getEbayPrice());
+        }
+        if($card->getTcgplayerPrice() != null){
+            $query .= ", tcgplayerPrice";
+            $values .= ", ?";
+            array_push($array, $card->getTcgplayerPrice());
+        }
+        if($card->getArchetype() != null){
+            $query .= ", archetype";
+            $values .= ", ?";
+            array_push($array, $card->getArchetype());
+        }
+        if($card->getAtk() != null){
+            $query .= ", atk";
+            $values .= ", ?";
+            array_push($array, $card->getAtk());
+        }
+        if($card->getAttribute() != null){
+            $query .= ", `attribute`";
+            $values .= ", ?";
+            array_push($array, $card->getAttribute());
+        }
+        if($card->getDef() != null){
+            $query .= ", def";
+            $values .= ", ?";
+            array_push($array, $card->getDef());
+        }
+        if($card->getLevel() != null){
+            $query .= ", level";
+            $values .= ", ?";
+            array_push($array, $card->getLevel());
+        }
+
+        $query .= ") ";
+        $values .= ")";
+        $finalQuery = $query . $values;
+
+        $conn = $this->pdo;
+
+        $resultInsert = $conn->prepare($finalQuery);
+        $resultInsert->execute($array);
+        
+        if ($resultInsert) {
             return true;
         } else {
             return false;

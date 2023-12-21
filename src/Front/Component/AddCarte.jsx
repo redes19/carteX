@@ -68,27 +68,28 @@ function App() {
           url: 'http://localhost:8000/src/Back/PHP/component/addCarte.php',
           method: 'POST',
           dataType: 'json',
-          data: {
-            name: $('#cardCreation-form-name-input').val(),
-            desc: $('#cardCreation-form-desc-input').val(),
-            imageUrl: $('#cardCreation-form-imageUrl-input').val(),
-            race: $('#cardCreation-form-race-input').val(),
-            type: $('#cardCreation-form-type-select').val(),
-            cardId: $('#cardCreation-form-cardId-input').val(),
-            level: $('#cardCreation-form-level-input').val(),
-            atk: $('#cardCreation-form-atk-input').val(),
-            def: $('#cardCreation-form-def-input').val(),
-            attribute: $('#cardCreation-form-attribute-input').val(),
-            archetype: $('#cardCreation-form-archetype-input').val(),
+          data: { 
+            submitCard: {
+              name: $('#cardCreation-form-name-input').val(),
+              desc: $('#cardCreation-form-desc-input').val(),
+              imageUrl: $('#cardCreation-form-imageUrl-input').val(),
+              race: $('#cardCreation-form-race-input').val(),
+              type: $('#cardCreation-form-type-select').val(),
+              cardId: $('#cardCreation-form-cardId-input').val(),
+              level: $('#cardCreation-form-level-input').val(),
+              atk: $('#cardCreation-form-atk-input').val(),
+              def: $('#cardCreation-form-def-input').val(),
+              attribute: $('#cardCreation-form-attribute-input').val(),
+              archetype: $('#cardCreation-form-archetype-input').val(),
+              amazonPrice: $('#cardCreation-form-amazonPrice-input').val(),
+              cardmarketPrice: $('#cardCreation-form-cardmarketPrice-input').val(),
+              coolstuffincPrice: $('#cardCreation-form-coolstuffincPrice-input').val(),
+              ebayPrice: $('#cardCreation-form-ebayPrice-input').val(),
+              tcgplayerPrice: $('#cardCreation-form-tcgplayerPrice-input').val()
+            }
           },
           success: function (response) {
-              // Vérifiez si la carte a été ajoutée avec succès
-              if (response.success) {
-                  alert("La carte a été ajoutée avec succès.");
-                  // Redirigez ou effectuez d'autres actions après l'ajout réussi
-              } else {
-                  alert("Une erreur s'est produite lors de l'ajout de la carte.");
-              }
+            console.log(response)
           },
           error: function (error) {
               console.error(error);
@@ -105,6 +106,7 @@ function App() {
         e.preventDefault();
         
         // CHECK IF CARD ALREADY EXIST 
+        handleAddCard();
     };
 
 
@@ -256,7 +258,62 @@ function App() {
                 label="Archetype de la carte"
                 placeholder='A.I., Unchained, etc...'
               />
-            </div>            
+            </div>  
+
+            <div className='cardCreation-form-amazonPrice'>
+              <TextField
+                type="number"
+                id="cardCreation-form-amazonPrice-input"
+                className='cardCreation-form-amazonPrice-input creation-input'
+                name="cardCreation-form-amazonPrice-input"
+                label="Prix Amazon"
+                placeholder='0.87'
+              />
+            </div>
+
+            <div className='cardCreation-form-cardmarketPrice'>
+              <TextField
+                type="number"
+                id="cardCreation-form-cardmarketPrice-input"
+                className='cardCreation-form-cardmarketPrice-input creation-input'
+                name="cardCreation-form-cardmarketPrice-input"
+                label="Prix CardMarket"
+                placeholder='0.75'
+              />
+            </div>
+
+            <div className='cardCreation-form-coolstuffincPrice'>
+              <TextField
+                type="number"
+                id="cardCreation-form-coolstuffincPrice-input"
+                className='cardCreation-form-coolstuffincPrice-input creation-input'
+                name="cardCreation-form-coolstuffincPrice-input"
+                label="Prix Cool Stuff Inc"
+                placeholder='0.78'
+              />
+            </div>
+
+            <div className='cardCreation-form-ebayPrice'>
+              <TextField
+                type="number"
+                id="cardCreation-form-ebayPrice-input"
+                className='cardCreation-form-ebayPrice-input creation-input'
+                name="cardCreation-form-ebayPrice-input"
+                label="Prix Ebay"
+                placeholder='0.81'
+              />
+            </div>
+
+            <div className='cardCreation-form-tcgplayerPrice'>
+              <TextField
+                type="number"
+                id="cardCreation-form-tcgplayerPrice-input"
+                className='cardCreation-form-tcgplayerPrice-input creation-input'
+                name="cardCreation-form-tcgplayerPrice-input"
+                label="Prix TCG Player"
+                placeholder='0.92'
+              />
+            </div>
             <button type="submit">Ajouter la carte</button>
           </form>
         </div>
