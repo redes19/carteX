@@ -78,7 +78,27 @@ const DeckPage = () => {
       setError('An error occurred while deleting the deck.');
     }
   };
+
+  const deleteCard = async (deckId, cardId) => {
+    try {
+      console.log('deckId:', deckId);
+      console.log('cardId:', cardId);
+      await axios.delete(`http://localhost:3001/user/decks/${deckId}/cards/${cardId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
   
+      // Mettre à jour la liste des cartes après la suppression
+      setSelectedDeck((prevSelectedDeck) => ({
+        ...prevSelectedDeck,
+        cards: prevSelectedDeck.cards.filter((card) => card.id !== cardId),
+      }));
+    } catch (error) {
+      console.error('Error deleting card:', error);
+      setError('An error occurred while deleting the card.');
+    }
+  };
 
   const settingsCards = {
     className: 'center',
@@ -121,16 +141,23 @@ const DeckPage = () => {
               </CardActions>
             </Card>
             {selectedDeck && selectedDeck.id === deck.id && (
-              <Slider {...settingsCards} key={deck.id} className="custom-slick-list">
-                {selectedDeck.cards.map((card) => (
-                  <Card key={card.id} sx={{ border: 'none', bgcolor: 'transparent' }}>
-                    <CardContent>
-                      <img src={card.imageUrl} alt={card.name} />
-                    </CardContent>
-                  </Card>
-                ))}
-              </Slider>
-            )}
+            <Slider {...settingsCards} key={deck.id} className="custom-slick-list">
+              {selectedDeck.cards.map((card) => (
+              <Card key={card.id} sx={{ border: 'none', bgcolor: 'transparent' }}>
+                <CardContent>
+                  <img src={card.imageUrl} alt={card.name} />
+                  <Button
+                    size="small"
+                    onClick={() => deleteCard(deck.id, card.id)}  // Passer l'id du deck et de la carte
+                    sx={{ color: 'red', border: 'none' }}
+                  >
+                    Supprimer
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+            </Slider>
+          )}
           </Grid>
         ))}
     </Grid>
