@@ -25,7 +25,7 @@ function App() {
         // IS THE CARD ALREADY IN THE DATABASE ?
         console.log(formData)
         $.ajax({
-            url: 'http://localhost:8000/src/Back/PHP/Component/CheckCarte.php',
+          url: 'http://localhost:8000/src/Back/PHP/component/CheckCarte.php',
             method: 'POST',
             dataType: 'json',
             data: { cardName: formData.name },
@@ -47,19 +47,32 @@ function App() {
     
     const handleAddCard = () => {
         $.ajax({
-            url: 'http://localhost:8000/src/Back/PHP/Component/addCarte.php', 
+            url: 'http://localhost:8000/src/Back/PHP/component/addCarte.php',
             method: 'POST',
             dataType: 'json',
-            data: formData,
-            success: function(response) {
-              // CARD ADDED, SHOW ALERT AND REDIRECT
-                console.log(response);      
+            data: {
+                name: formData.name,
+                desc: formData.desc,
+                imageUrl: formData.imageUrl,
+                race: formData.race,
+                type: formData.type,
+                cardId: formData.cardId,
             },
-            error: function(error) {
+            success: function (response) {
+                // Vérifiez si la carte a été ajoutée avec succès
+                if (response.success) {
+                    alert("La carte a été ajoutée avec succès.");
+                    // Redirigez ou effectuez d'autres actions après l'ajout réussi
+                } else {
+                    alert("Une erreur s'est produite lors de l'ajout de la carte.");
+                }
+            },
+            error: function (error) {
                 console.error(error);
-            }
+            },
         });
     };
+    
     
 
     const handleSubmit = (e) => {
@@ -113,15 +126,26 @@ function App() {
               />
             </label>
             <br />
-            <label>
-              Type:
-              <input
-                type="text"
-                name="type"
-                value={formData.type}
-                onChange={handleChange}
-              />
-            </label>
+            <label htmlFor="type-select">Choose a type:</label>
+
+            <select name="type">
+              <option value="">--Please choose an option--</option>
+              <option value="Normal_Monster">Normal Monster</option>
+              <option value="Effect_Monster">Effect_Monster</option>
+              <option value="Fusion_Monster">Fusion_Monster</option>
+              <option value="Ritual_Monster">Ritual_Monster</option>
+              <option value="Synchro_Monster">Synchro_Monster</option>
+              <option value="Xyz_Monster">Xyz_Monster</option>
+              <option value="Spell">Spell</option>
+              <option value="Trap">Trap</option>
+              <option value="Union_Effect">Union_Effect</option>
+              <option value="Spirit_Effect">Spirit_Effect</option>
+              <option value="Toon_Effect">Toon_Effect</option>
+              <option value="Gemini_Effect">Gemini_Effect</option>
+              <option value="Pendulum_Effect">Pendulum_Effect</option>
+              <option value="Token_Effect">Token_Effect</option>
+              <option value="Link_Effect">Link_Effect</option>
+            </select>
             <br />
             <label>
               ID de la carte:
