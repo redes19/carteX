@@ -34,28 +34,6 @@ export default function SearchFilters() {
       }
     };
 
-
-    // CHECK IF MAX PRICE IS SUPERIOR TO MIN PRICE and CHECK IF MIN PRICE IS INFERIOR TO MAX PRICE
-    let filterMaxPrice = document.getElementById('searchFilters-maxprice');
-    let filterMinPrice = document.getElementById('searchFilters-minprice');
-    // if(filterMaxPrice != null && filterMinPrice != null && (filterMaxPrice.value < filterMinPrice.value)){
-    //     filterMaxPrice.value = document.getElementById('searchFilters-minprice').value;
-    // }else if(filterMaxPrice != null && filterMinPrice != null && (filterMaxPrice.value == filterMinPrice.value)){
-    //     filterMaxPrice.value = parseInt(document.getElementById('searchFilters-minprice').value)+1;
-    // }
-    // if(filterMaxPrice != null && filterMinPrice != null){
-    //     filterMaxPrice.addEventListener('change', () => {
-    //         if(filterMaxPrice.value < filterMinPrice.value){
-    //             filterMaxPrice.value = filterMinPrice.value;
-    //         }
-    //     });
-    //     filterMinPrice.addEventListener('change', () => {
-    //         if(filterMinPrice.value > filterMaxPrice.value){
-    //             filterMinPrice.value = filterMaxPrice.value;
-    //         }
-    //     });
-    // }
-    
   return (
     <div className='searchFilters-container'>
 
@@ -72,9 +50,9 @@ export default function SearchFilters() {
         </ToggleButtonGroup>
         <input type="hidden" id="searchFilters-order" name="searchFilters-order" value={alignment}/>
 
-        <div>Prix : </div>
-        <div className='searchFilters-price-container'>
-            <Box sx={{ width: 300 }}>
+        <div className='searchFilters-price-container searchFilters-container-box'>
+            <div>Prix : </div>
+            <Box sx={{ width: 240 }}>
                 <Slider
                     id='searchFilters-distance'
                     getAriaLabel={() => 'Minimum distance'}
@@ -88,108 +66,111 @@ export default function SearchFilters() {
                     disableSwap
                 />
             </Box>
-            <div className='searchFilters-price-shop'>
-                <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="amazonPrice" defaultChecked={true}/>
-                <label for="searchFilters-price-shop">Amazon</label>
-            </div>
-            <div className='searchFilters-price-shop'>
-                <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="cardmarketPrice"/>
-                <label for="searchFilters-price-shop">CardMarket</label>
-            </div>
-            <div className='searchFilters-price-shop'>
-                <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="coolstuffincPrice"/>
-                <label for="searchFilters-price-shop">Cool Stuff Inc</label>
-            </div>
-            <div className='searchFilters-price-shop'>
-                <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="ebayPrice"/>
-                <label for="searchFilters-price-shop">Ebay</label>
-            </div>
-            <div className='searchFilters-price-shop'>
-                <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="tcgplayerPrice"/>
-                <label for="searchFilters-price-shop">TCG Player</label>
+            <div className="searchFilters-price-container-shop">
+                <div className='searchFilters-price-shop'>
+                    <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="amazonPrice" defaultChecked={true}/>
+                    <label for="searchFilters-price-shop">Amazon</label>
+                </div>
+                <div className='searchFilters-price-shop'>
+                    <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="cardmarketPrice"/>
+                    <label for="searchFilters-price-shop">CardMarket</label>
+                </div>
+                <div className='searchFilters-price-shop'>
+                    <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="coolstuffincPrice"/>
+                    <label for="searchFilters-price-shop">Cool Stuff Inc</label>
+                </div>
+                <div className='searchFilters-price-shop'>
+                    <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="ebayPrice"/>
+                    <label for="searchFilters-price-shop">Ebay</label>
+                </div>
+                <div className='searchFilters-price-shop'>
+                    <input type="radio" id="searchFilters-price-shop" name="searchFilters-price-shop" value="tcgplayerPrice"/>
+                    <label for="searchFilters-price-shop">TCG Player</label>
+                </div>
             </div>
         </div>
 
-        <div>Type : </div>
-        <div className='searchFilters-type-container'>
+        <div className='searchFilters-type-container searchFilters-container-box'>
+            <div>Type : </div>
             {/* TYPES ARE HARDCODED, AS THERE CAN BE NO MORE NO LESS THAN THOSE LISTED */}
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="default" defaultChecked={true}/>
-                <label for="searchFilters-type">Tout</label>
-            </div>
-            <div>Monster</div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Normal_Monster"/>
-                <label for="searchFilters-type">Normal Monster</label>
-            </div> 
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Effect_Monster"/>
-                <label for="searchFilters-type">Effect Monster</label>
-            </div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Fusion_Monster"/>
-                <label for="searchFilters-type">Fusion Monster</label>
-            </div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Ritual_Monster"/>
-                <label for="searchFilters-type">Ritual Monster</label>
-            </div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Synchro_Monster"/>
-                <label for="searchFilters-type">Synchro Monster</label>
-            </div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Xyz_Monster"/>
-                <label for="searchFilters-type">Xyz Monster</label>
-            </div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Link_Monster"/>
-                <label for="searchFilters-type">Link Monster</label>
-            </div>
+            <div className='searchFilters-type-radio-container'>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="default" defaultChecked={true}/>
+                    <label for="searchFilters-type">Tout</label>
+                </div>
+                <div className='searchFilters-type-radio-container-title'>Monster</div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Normal_Monster"/>
+                    <label for="searchFilters-type">Normal Monster</label>
+                </div> 
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Effect_Monster"/>
+                    <label for="searchFilters-type">Effect Monster</label>
+                </div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Fusion_Monster"/>
+                    <label for="searchFilters-type">Fusion Monster</label>
+                </div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Ritual_Monster"/>
+                    <label for="searchFilters-type">Ritual Monster</label>
+                </div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Synchro_Monster"/>
+                    <label for="searchFilters-type">Synchro Monster</label>
+                </div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Xyz_Monster"/>
+                    <label for="searchFilters-type">Xyz Monster</label>
+                </div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Link_Monster"/>
+                    <label for="searchFilters-type">Link Monster</label>
+                </div>
 
-            <div>Spell</div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Spell"/>
-                <label for="searchFilters-type">Spell</label>
-            </div>
+                <div className='searchFilters-type-radio-container-title'>Spell</div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Spell"/>
+                    <label for="searchFilters-type">Spell</label>
+                </div>
 
-            <div>Trap</div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Trap"/>
-                <label for="searchFilters-type">Trap</label>
-            </div>
+                <div className='searchFilters-type-radio-container-title'>Trap</div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Trap"/>
+                    <label for="searchFilters-type">Trap</label>
+                </div>
 
-            <div>Special </div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Union_Effect"/>
-                <label for="searchFilters-type">Union Effect</label>
-            </div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Spirit_Effect"/>
-                <label for="searchFilters-type">Spirit Effect</label>
-            </div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Toon_Effect"/>
-                <label for="searchFilters-type">Toon Effect</label>
-            </div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Gemini_Effect"/>
-                <label for="searchFilters-type">Gemini Effect</label>
-            </div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Pendulum_Effect"/>
-                <label for="searchFilters-type">Pendulum Effect</label>
-            </div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Token_Effect"/>
-                <label for="searchFilters-type">Token Effect</label>
-            </div>
-            <div className='searchFilters-type-radio'>
-                <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Link_Effect"/>
-                <label for="searchFilters-type">Link Effect</label>
+                <div className='searchFilters-type-radio-container-title'>Special </div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Union_Effect"/>
+                    <label for="searchFilters-type">Union Effect</label>
+                </div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Spirit_Effect"/>
+                    <label for="searchFilters-type">Spirit Effect</label>
+                </div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Toon_Effect"/>
+                    <label for="searchFilters-type">Toon Effect</label>
+                </div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Gemini_Effect"/>
+                    <label for="searchFilters-type">Gemini Effect</label>
+                </div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Pendulum_Effect"/>
+                    <label for="searchFilters-type">Pendulum Effect</label>
+                </div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Token_Effect"/>
+                    <label for="searchFilters-type">Token Effect</label>
+                </div>
+                <div className='searchFilters-type-radio'>
+                    <input type="radio" id="searchFilters-type" name="searchFilters-type" value="Link_Effect"/>
+                    <label for="searchFilters-type">Link Effect</label>
+                </div>
             </div>
         </div>
-
     </div>
   )
 }

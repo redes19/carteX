@@ -17,7 +17,7 @@ const Header = () => {
 
   if (isLoggedIn) {
     return (
-      <AppBar position="sticky" >
+      <AppBar position="sticky" className="header-appbar" >
         <Toolbar>
           <div className='searchBar-container'>
             <Box component="form" sx={{'& > :not(style)': { m: 1, width: '25ch' }, }} noValidate autoComplete="off" >
@@ -43,7 +43,7 @@ const Header = () => {
     )
   } else {
     return (
-      <AppBar position="sticky">
+      <AppBar position="sticky" className="header-appbar" >
         <Toolbar>
           <Button color="inherit" component={Link} to="/Inscription">
             Inscription

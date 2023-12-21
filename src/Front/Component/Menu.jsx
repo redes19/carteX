@@ -4,13 +4,13 @@ import SearchFilters from './SearchFilters';
 import axios from 'axios';
 
 import '../../Style/menu.css';
+import { is } from '@babel/types';
 
 
 export default function Menu() {
     const [cardList, setCardList] = useState([{}]);
     
     let url;
-    
     // FILTERS 
     let filterName = document.getElementById('searchFilters-name');
     let filterType = document.querySelector("input[name='searchFilters-type']:checked");
@@ -87,7 +87,6 @@ export default function Menu() {
 
 
   return (
-    <>
     <div className="mainPage">
       <SearchFilters/>
       <div className="mainPage-container">
@@ -97,13 +96,10 @@ export default function Menu() {
         <div className="cardsList">
           {/* HERE BE CARDS */}
           {cardList.map( (card,i) =>
-            <div className='cardsList-card'>
-                <Card card={card}/>
-            </div>
+            <Card key={i} card={card}/>
           )}
         </div>
       </div>
     </div>
-    </>
   )
 }
