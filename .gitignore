@@ -3,6 +3,9 @@
 # dependencies
 /node_modules
 /.pnp
+src/Back/PHP/composer.json
+src/Back/PHP/composer.lock
+src/Back/PHP/vendor
 
 .pnp.js
 
