@@ -15,6 +15,7 @@ Lancer le projet :
 
 ligne de commande
 niveau back :
+
 - npm install express --save
 - npm install dotenv
 - npm install cors
@@ -23,9 +24,14 @@ niveau back :
 - npm install jsonwebtoken
 
 
+Pour le php :
+
+- composer require --dev phpunit/phpunit
+
 nodemon server.js
 
 style :
+
 - npm install @mui/material @emotion/react @emotion/styled
 - npm install @mui/icons-material
 

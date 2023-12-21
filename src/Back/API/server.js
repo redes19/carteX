@@ -160,7 +160,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-
 // CARD PART
 
 app.get("/cards", async (req, res) => {
@@ -183,7 +182,9 @@ app.get("/cards/:id", async (req, res) => {
   try {
     conn = await pool_card.getConnection();
     // console.log("Request GET /cards/:id");
-    const rows = await conn.query("SELECT * FROM Carte WHERE id = ?", [req.params.id]);
+    const rows = await conn.query("SELECT * FROM Carte WHERE id = ?", [
+      req.params.id,
+    ]);
     conn.release();
     res.status(200).json(rows);
   } catch (err) {
@@ -196,9 +197,9 @@ app.get("/cards/:id", async (req, res) => {
 app.post("/cards", async (req, res) => {
   let conn; // Déplacez la déclaration ici pour qu'elle soit accessible dans le bloc finally
 
-  try {
+  try  {
     conn = await pool_card.getConnection();
-    // console.log("Request POST /cards\n");
+    // console.log("Request POST /cards\n");;
 
     req.body.data.forEach(async (card) => {
       const result = await conn.query("SELECT * FROM Carte WHERE cardId = ?", [card.id]);
@@ -577,8 +578,6 @@ app.get("/cards/search/:name/:type/:minprice/:maxprice/:shop/:rarity/:order/:ter
     console.log("Erreur " + err);
   }
 });
-
-
 
 app.listen(3001, () => {
   console.log("Serveur à l'écoute");

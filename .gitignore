@@ -17,6 +17,9 @@ src/Back/PHP/vendor
 
 # misc
 /src/Back/API/.env
+src/Back/PHP/composer.lock
+src/Back/PHP/composer.json
+src/Back/PHP/vendor
 .DS_Store
 .env.local
 .env.development.local

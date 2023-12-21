@@ -2,6 +2,8 @@ import React from "react";
 import Header from "./Front/Component/Header.jsx";
 import Inscription from "./Front/Component/Inscription.jsx";
 import Connection from "./Front/Component/Connection.jsx";
+import AddCarte from "./Front/Component/AddCarte.jsx";
+import Carte from "./Front/Component/carte.jsx";
 import AdminPage from "./Front/Component/Admin.jsx";
 import Inventaire from "./Front/Component/Inventaire.jsx";
 import Deck from "./Front/Component/Deck.jsx";
@@ -43,31 +45,31 @@ function App() {
   const getAPIData = () => {
     // modify to have the 300 first cards (we are limited to 72 cards from CORS limitations)
     let url = "https://db.ygoprodeck.com/api/v7/cardinfo.php/?&num=72&offset=0"; // URL of the API to get the data (external side) - here we get the 300 first cards
-    axios.get(url)
+    axios
+      .get(url)
       .then((response) => {
         loadAPIData(response.data.data);
       })
       .catch((error) => {
         console.log("Error1");
-      })
-  }
+      });
+  };
 
   const loadAPIData = (data) => {
     // we will probably have to change the data shape or URL
 
     let url = "http://localhost:3001/cards"; // URL of the API to insert the data (our side)
-    axios.post(url, 
-        { 
-          "data": data
-        }
-      )
+    axios
+      .post(url, {
+        data: data,
+      })
       .then((response) => {
         console.log("API successfully loaded");
       })
       .catch((error) => {
         console.log("Error2");
-      })
-  }
+      });
+  };
   getAPIData();
 
   return (
@@ -82,6 +84,8 @@ function App() {
             <Route path="/Inventaire" element={<Inventaire />} />
             <Route path="/Deck" element={<Deck />} />clear
             <Route path="/" element={<Menu />}></Route>
+          <Route path="/carte" element={<Carte />}></Route>
+          <Route path="/addCarte" element={<AddCarte />}></Route>
         </Routes>
         </header>
       </div>

@@ -1,0 +1,58 @@
+body{
+    background-color: red;
+}
+
+/* CSS pour les cartes Yu-Gi-Oh! */
+
+/* .carte {
+    width: 200px;
+    height: 280px;
+    margin: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ccc;
+    background-color: white;
+    position: relative;
+  }
+  
+  .carte h2 {
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 20px;
+    margin-top: 10px;
+  }
+  
+  .carte p {
+    font-family: sans-serif;
+    font-size: 12px;
+    margin: 5px 0;
+  }
+  
+  .carte .image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    max-height: 100%;
+  } */
+  
+  /* CSS spécifique à la carte Armityle the Chaos Phantom */
+  
+  /* .carte.armityle {
+    background-color: #f00;
+    border-color: #f00;
+    box-shadow: 0 0 10px #f00;
+  }
+  
+  .carte.armityle h2 {
+    color: white;
+  }
+  
+  .carte.armityle p {
+    color: white;
+  }
+  
+  .carte.armityle .image {
+    filter: grayscale(100%);
+  } */
