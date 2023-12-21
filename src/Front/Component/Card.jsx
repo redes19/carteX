@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useCart } from '../Component/CartProvider';
 
 export default function Card( {card}) {
   const [isHovered, setIsHovered] = useState(false);
@@ -11,6 +14,8 @@ export default function Card( {card}) {
     const handleMouseOutImg = (e) => {
       setIsHovered(false);
     }
+
+    const { addToCart } = useCart();
 
   return (
     <>
@@ -72,6 +77,10 @@ export default function Card( {card}) {
                       <div className='card-hover-text-content-text'>Prix Cool Stuff Inc: {card.coolstuffincPrice}</div>
                       <div className='card-hover-text-content-text'>Prix Ebay: {card.ebayPrice}</div>
                       <div className='card-hover-text-content-text'>Prix TCG Player: {card.tcgplayerPrice}</div>
+                      <IconButton color="primary" onClick={() => addToCart(card.id, card.amazonPrice, card.cardmarketPrice, card.coolstuffincPrice, card.ebayPrice, card.tcgplayerPrice)}>
+                        <ShoppingCartIcon />
+                      </IconButton>
+
                     </div>
                   )}
                   
@@ -83,7 +92,8 @@ export default function Card( {card}) {
                       <Button variant="text" onClick={() => setPageCount(pageCount + 1)}> Suivant </Button>
                     )}  
                   </div>
-                
+
+
               </div>
             )}
         </div>

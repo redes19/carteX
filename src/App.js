@@ -6,6 +6,7 @@ import AddCarte from "./Front/Component/AddCarte.jsx";
 import Carte from "./Front/Component/carte.jsx";
 import AdminPage from "./Front/Component/Admin.jsx";
 import Inventaire from "./Front/Component/Inventaire.jsx";
+import {CartProvider} from "./Front/Component/CartProvider.jsx";
 import Deck from "./Front/Component/Deck.jsx";
 import CardsPanel from "./Front/Component/CardsPanel.jsx";
 import {AuthProvider} from "./Front/Component/AuthProvider.jsx";
@@ -76,6 +77,7 @@ function App() {
 
   return (
     <AuthProvider>
+      <CartProvider>
       <div className="App">
         <header className="App-header">
           <Header /> 
@@ -93,6 +95,7 @@ function App() {
         </Routes>
         </header>
       </div>
+      </CartProvider>
     </AuthProvider>
   );
 }
