@@ -88,7 +88,8 @@ function App() {
             }
           },
           success: function (response) {
-            
+            console.log(response)
+            window.location.href = "http://localhost:3000/";
           },
           error: function (error) {
               console.error(error);

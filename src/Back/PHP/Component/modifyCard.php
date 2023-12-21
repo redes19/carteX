@@ -41,6 +41,6 @@ if (isset($_POST["modifyCard"])) {
     $carteDAO = new CarteDAO($pdo);  
     $modifyCardToDB = $carteDAO->updateCarte($carte);
 
-    echo json_encode(array('modifyCard' => $carte->getName()));
+    echo json_encode(array('modifyCard' => "réussi"));
 }
 ?>

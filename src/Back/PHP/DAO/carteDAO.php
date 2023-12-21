@@ -212,7 +212,6 @@ class CarteDAO {
     
 
     public function updateCarte(Carte $card){
-        var_dump($card);
         $query = "UPDATE Carte SET `desc` = ? , imageUrl = ? , race = ? , `type` = ? , cardId = ? ";
         $array = [
           $card->getDesc(),
@@ -266,8 +265,6 @@ class CarteDAO {
         array_push($array, $card->getId());
 
         $query .= " WHERE id = ? ";
-        var_dump($query);
-        var_dump($array);
 
         $conn = $this->pdo;
 

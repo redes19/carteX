@@ -64,6 +64,7 @@ function App() {
 
     const handleAddCard = () => {
       if(formIsValid){
+        let tempType = document.getElementById('cardCreation-form-type-select').parentNode.childNodes[1].value.replaceAll("_", " ");
         $.ajax({
           url: 'http://localhost:8000/src/Back/PHP/component/addCarte.php',
           method: 'POST',
@@ -74,7 +75,7 @@ function App() {
               desc: $('#cardCreation-form-desc-input').val(),
               imageUrl: $('#cardCreation-form-imageUrl-input').val(),
               race: $('#cardCreation-form-race-input').val(),
-              type: $('#cardCreation-form-type-select').val(),
+              type: tempType,
               cardId: $('#cardCreation-form-cardId-input').val(),
               level: $('#cardCreation-form-level-input').val(),
               atk: $('#cardCreation-form-atk-input').val(),
@@ -89,7 +90,8 @@ function App() {
             }
           },
           success: function (response) {
-            console.log(response)
+          console.log(response)
+          window.location.href = "http://localhost:3000/";
           },
           error: function (error) {
               console.error(error);
