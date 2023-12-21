@@ -7,7 +7,11 @@ src/Back/PHP/composer.json
 src/Back/PHP/composer.lock
 src/Back/PHP/vendor
 
+
+.gitignore
 .pnp.js
+package-lock.json
+package.json
 
 # testing
 /coverage
