@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+
 import {
   Grid,
   Button,
@@ -24,9 +26,18 @@ const InventoryPage = () => {
   const [newDeckName, setNewDeckName] = useState('');
   const [hoveredCardId, setHoveredCardId] = useState(null);
 
+  const navigate = useNavigate();
+
   // Fetch inventory and decks on component mount
   useEffect(() => {
     const fetchInventory = async () => {
+      const token = localStorage.getItem('token');
+      console.log('token', token);
+      // Vérifier si le token est présent
+      if (token == null) {
+        console.log('Token is null');
+        navigate('/');
+      }
       try {
         const response = await axios.get(`http://localhost:3001/user/inventory`, {
           headers: {

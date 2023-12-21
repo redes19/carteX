@@ -328,9 +328,12 @@ app.get("/user/inventory", async (req, res) => {
 app.get("/user/decks/:deckId/cards", async (req, res) => {
   const { deckId } = req.params;
   const token = req.headers.authorization.split(' ')[1];
-
+  console.log("token", token)
   // Utiliser getUserIdFromToken pour obtenir l'ID de l'utilisateur
-  getUserIdFromToken(token);
+  if(getUserIdFromToken(token)==null){
+    res.status(403).json({ error: "Unauthorized" });
+    return null;
+  }
   let conn;  
   
   try {

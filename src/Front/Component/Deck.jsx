@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Grid, Card, CardContent, Typography, CardActions, Button } from '@mui/material';
 import Slider from 'react-slick';
+import { useNavigate } from "react-router-dom";
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const DeckPage = () => {
+  const navigate = useNavigate();
   const [decks, setDecks] = useState([]);
   const [selectedDeck, setSelectedDeck] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,12 +17,17 @@ const DeckPage = () => {
   useEffect(() => {
     const fetchDecks = async () => {
       try {
+        const token = localStorage.getItem('token');
+        // Vérifier si le token est présent
+        if (token == null) {
+          navigate('/');
+        }
+
         const response = await axios.get(`http://localhost:3001/user/decks`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
-
         setDecks(response.data);
         setLoading(false);
       } catch (error) {
