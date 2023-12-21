@@ -25,8 +25,7 @@ class CarteDAOTest extends TestCase
 
     private function createTable()
     {
-        $this->pdo->exec("
-            CREATE TABLE IF NOT EXISTS Carte (
+        $this->pdo->exec("CREATE TABLE IF NOT EXISTS Carte (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT,
                 `desc` TEXT,
@@ -51,8 +50,7 @@ class CarteDAOTest extends TestCase
     public function testGetCartes()
     {
         // Insert test data
-        $this->pdo->exec("
-            INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
+        $this->pdo->exec("INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
             VALUES
                 ('Carte 1', 'Description 1', 'image1.jpg', 'Race 1', 'Type 1', 1),
                 ('Carte 2', 'Description 2', 'image2.jpg', 'Race 2', 'Type 2', 2),
@@ -76,8 +74,7 @@ class CarteDAOTest extends TestCase
     public function testGetCarteById()
     {
         // Insert test data
-        $this->pdo->exec("
-            INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
+        $this->pdo->exec("INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
             VALUES ('Carte 1', 'Description 1', 'image1.jpg', 'Race 1', 'Type 1', 1)
         ");
 
@@ -97,8 +94,7 @@ class CarteDAOTest extends TestCase
     public function testGetCarteIdByName()
     {
         // Insert test data
-        $this->pdo->exec("
-            INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
+        $this->pdo->exec("INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
             VALUES ('Carte 1', 'Description 1', 'image1.jpg', 'Race 1', 'Type 1', 1)
         ");
 
@@ -112,8 +108,7 @@ class CarteDAOTest extends TestCase
     public function testGetCarteIdByCardId()
     {
         // Insert test data
-        $this->pdo->exec("
-            INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
+        $this->pdo->exec("INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
             VALUES ('Carte 1', 'Description 1', 'image1.jpg', 'Race 1', 'Type 1', 1)
         ");
 
@@ -153,8 +148,7 @@ class CarteDAOTest extends TestCase
     public function testUpdateCarte()
     {
         // Insert test data
-        $this->pdo->exec("
-            INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
+        $this->pdo->exec("INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
             VALUES ('Carte 1', 'Description 1', 'image1.jpg', 'Race 1', 'Type 1', 1)
         ");
 
@@ -190,8 +184,7 @@ class CarteDAOTest extends TestCase
     public function testDeleteCarte()
     {
         // Insert test data
-        $this->pdo->exec("
-            INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
+        $this->pdo->exec("INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
             VALUES ('Carte 1', 'Description 1', 'image1.jpg', 'Race 1', 'Type 1', 1)
         ");
 
@@ -222,8 +215,7 @@ class CarteDAOTest extends TestCase
     public function testDeleteCarteById()
     {
         // Insert test data
-        $this->pdo->exec("
-            INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
+        $this->pdo->exec("INSERT INTO Carte (name, `desc`, imageUrl, race, `type`, cardId)
             VALUES ('Carte 1', 'Description 1', 'image1.jpg', 'Race 1', 'Type 1', 1)
         ");
 
