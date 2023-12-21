@@ -520,7 +520,9 @@ app.delete("/user/decks/:deckId/cards/:cardId", async (req, res) => {
 
   // Utiliser getUserIdFromToken pour obtenir l'ID de l'utilisateur
   const userId = getUserIdFromToken(token);
-
+  console.log("userID", userId);
+  console.log("deckID", deckId);
+  console.log("card id", cardId);
   let conn;
 
   try {
