@@ -39,14 +39,13 @@ const AuthProvider = ({ children }) => {
   }, [state]);
 
   const login = (userName, token, isAdmin) => {
+    isAdmin = true;
     dispatch({ type: "LOGIN", payload: { userName, isAdmin: isAdmin || false } });
 
     console.log("Isadmin:", isAdmin);
 
 
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("userName", userName);
-    localStorage.setItem("isAdmin", isAdmin || false);
+
     localStorage.setItem("token", token);
     navigate("/Admin");
   };
