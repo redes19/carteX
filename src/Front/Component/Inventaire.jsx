@@ -147,6 +147,22 @@ const handleAddToDeckClick = async () => {
     setAddToDeckDialogOpen(false);
   };
 
+  const deleteCardInInventory = async (inventoryId) => {
+    try {
+      await axios.deleteCardInInventory(`http://localhost:3001/user/inventory/remove/${inventoryId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      // Mettre à jour l'inventaire après la suppression
+      setInventory((prevInventory) => prevInventory.filter((item) => item.id !== inventoryId));
+    } catch (error) {
+      console.error('Error deleting card from inventory:', error);
+    }
+  };
+  
+
   return (
     <Grid container spacing={2}>
       {inventory.map((item) => (
@@ -159,6 +175,9 @@ const handleAddToDeckClick = async () => {
             onMouseEnter={() => handleCardHover(item.carte_details)}
             onMouseLeave={() => handleCardHover(null)}
           />
+          <Button onClick={() => deleteCardInInventory(item.id)} color="secondary">
+            Sell
+          </Button>
         </Grid>
       ))}
 
