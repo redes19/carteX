@@ -13,27 +13,27 @@ const Connexion = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await axios.post("http://localhost:3001/login", {
         email,
         password,
       });
-
-      const { token, userId, userName, isAdmin } = response.data;
-
+  
+      const { token, userName, isAdmin } = response.data;
+      console.log("Admin", isAdmin);
       login(userName, token, isAdmin);
-
+  
       // Trigger a navigation to the current page to reload the header
       navigate(window.location.pathname);
     } catch (error) {
       console.error("Erreur lors de la connexion:", error);
     }
-
+  
     setEmail("");
     setPassword("");
   };
-
+  
   return (
     <Container>
       <Typography variant="h2">Connexion</Typography>

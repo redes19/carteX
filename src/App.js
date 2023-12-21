@@ -81,7 +81,7 @@ function App() {
             <Route path="/Admin" element={<AdminPage />} />
             <Route path="/Inventaire" element={<Inventaire />} />
             <Route path="/Deck" element={<Deck />} />clear
-            <Route path="/Menu" element={<Menu />}></Route>
+            <Route path="/" element={<Menu />}></Route>
         </Routes>
         </header>
       </div>

@@ -25,46 +25,34 @@ const authReducer = (state, action) => {
 };
 
 const AuthProvider = ({ children }) => {
-    const navigate = useNavigate();
-    const [state, dispatch] = useReducer(authReducer, {
-      isLoggedIn: localStorage.getItem("isLoggedIn") === "true",
-      userName: localStorage.getItem("userName") || null,
-      isAdmin: localStorage.getItem("isAdmin") === "true",
-    });
-  
-    useEffect(() => {
-      console.log("Auth State Updated:", state);
-      localStorage.setItem("isLoggedIn", state.isLoggedIn.toString());
-      localStorage.setItem("userName", state.userName || "");
-      localStorage.setItem("isAdmin", state.isAdmin.toString());
-    }, [state]);
-  
-    const login = (userName, token, isAdmin) => {
-      dispatch({ type: "LOGIN", payload: { userName, isAdmin } });
-  
-      // Utilisez directement les valeurs mises à jour dans le state
-      console.log("IsLoggedIn:", state.isLoggedIn);
-      console.log("UserName:", state.userName);
-      console.log("IsAdmin:", state.isAdmin);
-      console.log("Token:", token);
+  const navigate = useNavigate();
+  const [state, dispatch] = useReducer(authReducer, {
+    isLoggedIn: localStorage.getItem("isLoggedIn") === "true",
+    userName: localStorage.getItem("userName") || null,
+    isAdmin: localStorage.getItem("isAdmin") === "true", // Parse as boolean
+  });
 
-      if (isAdmin = 1) {
-        isAdmin = true;
-      }
-  
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userName", userName);
-      localStorage.setItem("isAdmin", isAdmin.toString());
-      localStorage.setItem("token", token);
-      navigate("/Admin");
-    };
-  
-    const logout = () => {
-      dispatch({ type: "LOGOUT" });
-      localStorage.removeItem("token");
-      navigate("/");
-    };
-  
+  useEffect(() => {
+    console.log("Auth State Updated:", state);
+    localStorage.setItem("isLoggedIn", state.isLoggedIn.toString());
+    localStorage.setItem("userName", state.userName || "");
+    localStorage.setItem("isAdmin", state.isAdmin.toString());
+  }, [state]);
+
+  const login = (userName, token, isAdmin) => {
+    dispatch({ type: "LOGIN", payload: { userName, isAdmin: isAdmin || false } });
+
+    console.log("Isadmin:", isAdmin);
+
+    localStorage.setItem("token", token);
+    navigate("/");
+  };
+
+  const logout = () => {
+    dispatch({ type: "LOGOUT" });
+    localStorage.removeItem("token");
+    navigate("/");
+  };
 
   return (
     <AuthContext.Provider value={{ ...state, login, logout }}>

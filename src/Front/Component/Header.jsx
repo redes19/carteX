@@ -11,7 +11,6 @@ const Header = () => {
   const { isLoggedIn, isAdmin, logout } = useAuth();
 
   useEffect(() => {
-    // Cette fonction sera appelée chaque fois que l'état d'authentification change
     console.log("Auth State in Header Updated:", isLoggedIn);
   }, [isLoggedIn]);
 
@@ -24,7 +23,7 @@ const Header = () => {
               <TextField className="searchBar" id="searchBar" label="Recherche" variant="outlined"/>
             </Box>  
           </div>
-          {isAdmin && (
+          {isAdmin !== undefined && isAdmin && (
             <Button color="inherit" component={Link} to="/Admin">
               Admin
             </Button>
