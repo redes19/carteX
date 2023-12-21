@@ -127,8 +127,6 @@ app.post("/user", async (req, res) => {
 app.delete("/user/:id", verifyToken, async (req, res) => {
   let conn; // Declare a variable to hold the database connection
 
-app.delete("/user/:id", verifyToken, async (req, res) => {
-  let conn;
   try {
     // Attempt to get a connection from the 'pool_user'
     conn = await pool_user.getConnection();
@@ -141,23 +139,19 @@ app.delete("/user/:id", verifyToken, async (req, res) => {
       req.params.id,
     ]);
 
-    if (result.affectedRows > 0) {
-      // La suppression a réussi
-      res.status(200).json({ success: true });
-    } else {
-      // Aucune ligne n'a été affectée, l'utilisateur n'a peut-être pas été trouvé
-      res.status(404).json({ success: false, error: "User not found" });
-    }
+    // Log the result of the delete operation to the console
+    console.log(rows);
+
+    // Respond to the client with a status code of 200 (OK) and the result of the delete operation
+    res.status(200).json(rows);
   } catch (err) {
     // Handle any errors that may occur during the execution of the try block
     console.error(err);
-    res.status(500).json({ success: false, error: "Internal server error" });
   } finally {
     // Release the database connection in the 'finally' block to ensure it happens regardless of success or failure
     if (conn) conn.release();
   }
 });
-
 
 const secretKey = process.env.JWT_SECRET_KEY; // Recovering the secret key from an environment variable
 
@@ -753,7 +747,7 @@ app.delete("/user/decks/:deckId/cards/:cardId", async (req, res) => {
 
 // verifyToken checks if user is admin
 // Define a route that listens for GET requests at the "/user/decks" endpoint, with token verification middleware
-app.get("/user/decks", verifyToken, async (req, res) => {
+app.get("/user/decks", async (req, res) => {
   try {
     // Obtain the user ID from the token using the getUserIdFromToken function
     const userId = getUserIdFromToken(req.headers.authorization.split(" ")[1]);
