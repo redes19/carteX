@@ -2,9 +2,9 @@ const express = require("express"); // récupération express
 const app = express(); // variable utilisant la librairie express
 const bcrypt = require("bcrypt");
 let cors = require("cors");
-const jwt = require('jsonwebtoken');
-const verifyToken = require('./verifyToken');
-const getUserIdFromToken = require('./getUserIdFromToken');
+const jwt = require("jsonwebtoken");
+const verifyToken = require("./verifyToken");
+const getUserIdFromToken = require("./getUserIdFromToken");
 
 require("dotenv").config();
 
@@ -27,8 +27,7 @@ const pool_card = mariadb.createPool({
   database: process.env.DB_DTB_PROJECT,
 });
 
-
-app.get("/user", verifyToken,async (req, res) => {
+app.get("/user", verifyToken, async (req, res) => {
   let conn;
   try {
     conn = await pool_user.getConnection();
@@ -90,7 +89,7 @@ app.post("/user", async (req, res) => {
 
 // delete user
 
-app.delete("/user/:id",verifyToken, async (req, res) => {
+app.delete("/user/:id", verifyToken, async (req, res) => {
   let conn;
   try {
     conn = await pool_user.getConnection();
@@ -105,8 +104,7 @@ app.delete("/user/:id",verifyToken, async (req, res) => {
   } finally {
     if (conn) conn.release();
   }
-}
-);
+});
 
 const secretKey = process.env.JWT_SECRET_KEY; // Récupérer la clé secrète depuis une variable d'environnement
 
@@ -132,17 +130,15 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Mot de passe incorrect" });
     }
 
-
     // Créer un token JWT
     const token = jwt.sign(
       {
         userId: user.id,
-        isAdmin: user.isAdmin, 
+        isAdmin: user.isAdmin,
       },
       secretKey,
-      { expiresIn: '10h' } 
+      { expiresIn: "10h" }
     );
-
 
     // Ajouter le nom d'utilisateur et le token à la réponse
     res.json({
@@ -150,7 +146,7 @@ app.post("/login", async (req, res) => {
       userId: user.id,
       userName: user.nom,
       isAdmin: user.isAdmin,
-      token : token,
+      token: token,
     });
   } catch (err) {
     console.error("Erreur lors de la connexion:", err);
@@ -159,7 +155,6 @@ app.post("/login", async (req, res) => {
     if (conn) conn.release();
   }
 });
-
 
 // CARD PART
 
@@ -183,7 +178,9 @@ app.get("/cards/:id", async (req, res) => {
   try {
     conn = await pool_card.getConnection();
     // console.log("Request GET /cards/:id");
-    const rows = await conn.query("SELECT * FROM Carte WHERE id = ?", [req.params.id]);
+    const rows = await conn.query("SELECT * FROM Carte WHERE id = ?", [
+      req.params.id,
+    ]);
     conn.release();
     res.status(200).json(rows);
   } catch (err) {
@@ -201,65 +198,68 @@ app.post("/cards", async (req, res) => {
     // console.log("Request POST /cards\n");
 
     req.body.data.forEach(async (card) => {
-      const result = await conn.query("SELECT * FROM Carte WHERE cardId = ?", [card.id]);
+      const result = await conn.query("SELECT * FROM Carte WHERE cardId = ?", [
+        card.id,
+      ]);
       if (result.length == 0) {
-        let query = "INSERT INTO Carte (name, `desc`, imageUrl, race, type, cardId";
+        let query =
+          "INSERT INTO Carte (name, `desc`, imageUrl, race, type, cardId";
         let values = "VALUES (?, ?, ?, ?, ?, ?";
         let array = [
-          card.name, 
+          card.name,
           card.desc,
           card.card_images[0].image_url,
           card.race,
           card.type,
           card.id,
-          ]
-        
-        if(card.card_prices[0].amazon_price != null){
+        ];
+
+        if (card.card_prices[0].amazon_price != null) {
           query += ", amazonPrice";
           values += ", ?";
           array.push(card.card_prices[0].amazon_price);
         }
-        if(card.card_prices[0].cardmarket_price != null){
+        if (card.card_prices[0].cardmarket_price != null) {
           query += ", cardmarketPrice";
           values += ", ?";
           array.push(card.card_prices[0].cardmarket_price);
         }
-        if(card.card_prices[0].coolstuffinc_price != null){
+        if (card.card_prices[0].coolstuffinc_price != null) {
           query += ", coolstuffincPrice";
           values += ", ?";
           array.push(card.card_prices[0].coolstuffinc_price);
         }
-        if(card.card_prices[0].ebay_price != null){
+        if (card.card_prices[0].ebay_price != null) {
           query += ", ebayPrice";
           values += ", ?";
           array.push(card.card_prices[0].ebay_price);
         }
-        if(card.card_prices[0].tcgplayer_price != null){
+        if (card.card_prices[0].tcgplayer_price != null) {
           query += ", tcgplayerPrice";
           values += ", ?";
           array.push(card.card_prices[0].tcgplayer_price);
         }
-        if(card.archetype != null){
+        if (card.archetype != null) {
           query += ", archetype";
           values += ", ?";
           array.push(card.archetype);
         }
-        if(card.atk != null){
+        if (card.atk != null) {
           query += ", atk";
           values += ", ?";
           array.push(card.atk);
         }
-        if(card.attribute != null){
+        if (card.attribute != null) {
           query += ", `attribute`";
           values += ", ?";
           array.push(card.attribute);
         }
-        if(card.def != null){
+        if (card.def != null) {
           query += ", def";
           values += ", ?";
           array.push(card.def);
         }
-        if(card.level != null){
+        if (card.level != null) {
           query += ", level";
           values += ", ?";
           array.push(card.level);
@@ -269,12 +269,10 @@ app.post("/cards", async (req, res) => {
         values += ")";
         const finalQuery = query + values;
 
-
         const resultInsert = await conn.query(finalQuery, array);
       }
     });
     res.status(200).json("Success");
-
   } catch (err) {
     console.log("Erreur" + err);
     // res.status(500).json({ message: "Internal Server Error" });
@@ -283,10 +281,9 @@ app.post("/cards", async (req, res) => {
   }
 });
 
-
 app.get("/user/inventory", async (req, res) => {
   try {
-    const token = req.headers.authorization.split(' ')[1];
+    const token = req.headers.authorization.split(" ")[1];
 
     const userId = getUserIdFromToken(token);
 
@@ -295,17 +292,21 @@ app.get("/user/inventory", async (req, res) => {
 
     try {
       // Sélectionnez l'inventaire de l'utilisateur depuis la base de données principale
-      const inventoryQuery = "SELECT * FROM Inventaire WHERE utilisateur_id = ?";
+      const inventoryQuery =
+        "SELECT * FROM Inventaire WHERE utilisateur_id = ?";
       const inventoryResult = await conn.query(inventoryQuery, [userId]);
 
       // Sélectionnez les détails des cartes de la base de données des cartes
-      const cardDetailsQuery = "SELECT Carte.id, Carte.name, Carte.desc, Carte.imageUrl FROM projet.Carte WHERE Carte.id IN (?)";
+      const cardDetailsQuery =
+        "SELECT Carte.id, Carte.name, Carte.desc, Carte.imageUrl FROM projet.Carte WHERE Carte.id IN (?)";
       const cardIds = inventoryResult.map((item) => item.carte_id);
       const cardDetailsResult = await conn.query(cardDetailsQuery, [cardIds]);
 
       // Associez les détails des cartes avec l'inventaire
       const inventoryWithDetails = inventoryResult.map((inventoryItem) => {
-        const matchingCard = cardDetailsResult.find((card) => card.id === inventoryItem.carte_id);
+        const matchingCard = cardDetailsResult.find(
+          (card) => card.id === inventoryItem.carte_id
+        );
         return {
           id: inventoryItem.id,
           utilisateur_id: inventoryItem.utilisateur_id,
@@ -327,18 +328,18 @@ app.get("/user/inventory", async (req, res) => {
 
 app.get("/user/decks/:deckId/cards", async (req, res) => {
   const { deckId } = req.params;
-  const token = req.headers.authorization.split(' ')[1];
-  console.log("token", token)
+  const token = req.headers.authorization.split(" ")[1];
+  console.log("token", token);
   // Utiliser getUserIdFromToken pour obtenir l'ID de l'utilisateur
-  if(getUserIdFromToken(token)==null){
+  if (getUserIdFromToken(token) == null) {
     res.status(403).json({ error: "Unauthorized" });
     return null;
   }
-  let conn;  
-  
+  let conn;
+
   try {
     // Assurez-vous que la logique d'accès à la base de données est correcte
-    conn = await pool_user.getConnection();  
+    conn = await pool_user.getConnection();
 
     // Sélectionnez les cartes associées au deck
     const cardsQuery = `
@@ -359,14 +360,13 @@ app.get("/user/decks/:deckId/cards", async (req, res) => {
   }
 });
 
-
 //ajouter une carte à un deck
 app.post("/user/decks/:deckId/:cardId", async (req, res) => {
   const { deckId, cardId } = req.params;
   console.log("lancement requete post ccarte Deck");
   console.log("deckID", deckId);
   console.log("card id", cardId);
-  const token = req.headers.authorization.split(' ')[1];
+  const token = req.headers.authorization.split(" ")[1];
 
   // Utiliser getUserIdFromToken pour obtenir l'ID de l'utilisateur
   const userId = getUserIdFromToken(token);
@@ -383,7 +383,10 @@ app.post("/user/decks/:deckId/:cardId", async (req, res) => {
     `;
     const deckOwnershipResult = await conn.query(deckOwnershipQuery, [deckId]);
 
-    if (deckOwnershipResult.length === 0 || deckOwnershipResult[0].user_id !== userId) {
+    if (
+      deckOwnershipResult.length === 0 ||
+      deckOwnershipResult[0].user_id !== userId
+    ) {
       // Le deck n'appartient pas à l'utilisateur actuel
       res.status(403).json({ error: "Unauthorized" });
       return;
@@ -414,13 +417,9 @@ app.post("/user/decks/:deckId/:cardId", async (req, res) => {
   }
 });
 
-
-
-
-
 app.get("/user/decks", verifyToken, async (req, res) => {
   try {
-    const userId = getUserIdFromToken(req.headers.authorization.split(' ')[1]);
+    const userId = getUserIdFromToken(req.headers.authorization.split(" ")[1]);
 
     // Utilisez une seule connexion pour effectuer la transaction
     const conn = await pool_user.getConnection();
@@ -444,7 +443,7 @@ app.get("/user/decks", verifyToken, async (req, res) => {
 // ajouter un deck à un utilisateur
 app.post("/user/decks", async (req, res) => {
   try {
-    const userId = getUserIdFromToken(req.headers.authorization.split(' ')[1]);
+    const userId = getUserIdFromToken(req.headers.authorization.split(" ")[1]);
 
     // Utilisez une seule connexion pour effectuer la transaction
     const conn = await pool_user.getConnection();
@@ -469,116 +468,151 @@ app.post("/user/decks", async (req, res) => {
   }
 });
 
+// Supprimer un deck par ID
+app.delete("/user/decks/:deckId", verifyToken, async (req, res) => {
+  try {
+    const userId = getUserIdFromToken(req.headers.authorization.split(" ")[1]);
+    const deckId = req.params.deckId;
 
-app.get("/cards/search/:name/:type/:minprice/:maxprice/:shop/:rarity/:order/:terms", async (req, res) => { 
-  try{
-    let conn = await pool_card.getConnection();
-    let query = "SELECT * FROM Carte "; 
-    let params = [];
-    let bool = false;
-    let terms = "";
+    // Utilisez une seule connexion pour effectuer la transaction
+    const conn = await pool_user.getConnection();
 
-    // IS THERE A TYPE ?  
-    if(req.params.type != "default"){
-      if(bool){
-        query += "AND type LIKE ? ";
-      }
-      else{
-        query += "WHERE type LIKE ? ";
-        bool = true;
-      }
-      params.push("%" + req.params.type + "%");
-    }
-    
-    // IS THERE A RARITY GIVEN ?
-    if(req.params.rarity != "default"){
-      if(bool){
-        query += "AND rarity LIKE ? ";
-      }
-      else{
-        query += "WHERE rarity LIKE ? ";
-        bool = true;
-      }
-      params.push("%" + req.params.rarity + "%");
-    }
+    try {
+      // Vérifiez si le deck appartient à l'utilisateur
+      const checkOwnershipQuery =
+        "SELECT * FROM Deck WHERE id = ? AND user_id = ?";
+      const checkOwnershipResult = await conn.query(checkOwnershipQuery, [
+        deckId,
+        userId,
+      ]);
 
-    // ARE THERE SEARCHTERMS ?
-    if(req.params.terms != "nosearch"){
-      if(bool){
-        query += "AND (name LIKE ? OR `desc` LIKE ?) ";
+      if (checkOwnershipResult.length === 0) {
+        // Le deck n'appartient pas à l'utilisateur
+        return res
+          .status(403)
+          .json({ error: "Forbidden: Deck does not belong to the user" });
       }
-      else{
-        query += "WHERE (name LIKE ? OR `desc` LIKE ?) ";
-        bool = true;
-      }
-      terms = req.params.terms.split(" ");
-      let termsString = "";
-      terms.forEach((term) => {
-        termsString += "%" + term + "%";
-      });
-      params.push(termsString);
-      params.push(termsString);
-    }
-    
-    // GET SHOP AND PRICE
-    if(bool){
-      if(req.params.shop == "amazonPrice"){
-        query += "AND amazonPrice >= ? AND amazonPrice <= ? ";
-      }else if(req.params.shop == "cardmarketPrice"){
-        query += "AND cardmarketPrice >= ? AND cardmarketPrice <= ? ";
-      }else if(req.params.shop == "coolstuffincPrice"){
-        query += "AND coolstuffincPrice >= ? AND coolstuffincPrice <= ? ";
-      }else if(req.params.shop == "ebayPrice"){
-        query += "AND ebayPrice >= ? AND ebayPrice <= ? ";
-      }else if(req.params.shop == "tcgplayerPrice"){
-        query += "AND tcgplayerPrice >= ? AND tcgplayerPrice <= ? ";
-      }
-    }else{
-      if(req.params.shop == "amazonPrice"){
-        query += "WHERE amazonPrice >= ? AND amazonPrice <= ? ";
-        bool = true;
-      }else if(req.params.shop == "cardmarketPrice"){
-        query += "WHERE cardmarketPrice >= ? AND cardmarketPrice <= ? ";
-        bool = true;
-      }else if(req.params.shop == "coolstuffincPrice"){
-        query += "WHERE coolstuffincPrice >= ? AND coolstuffincPrice <= ? ";
-        bool = true;
-      }else if(req.params.shop == "ebayPrice"){
-        query += "WHERE ebayPrice >= ? AND ebayPrice <= ? ";
-        bool = true;
-      }else if(req.params.shop == "tcgplayerPrice"){
-        query += "WHERE tcgplayerPrice >= ? AND tcgplayerPrice <= ? ";
-        bool = true;
-      }
-    }
-    params.push(req.params.maxprice);
-    params.push(req.params.minprice);
 
-    // IS THERE A NAME ?
-    if(req.params.name != "false"){
-      if(bool){
-        query += "AND name LIKE ? ";
-      }
-      else{
-        query += "WHERE name LIKE ? ";
-        bool = true;
-      }
-      params.push("%" + terms + "%");
-    }
+      // Supprimez le deck de la base de données
+      const deleteDeckQuery = "DELETE FROM Deck WHERE id = ?";
+      await conn.query(deleteDeckQuery, [deckId]);
 
-    // ORDER
-    query += "ORDER BY name " + req.params.order ;
-    // params.push(req.params.order);
-    const rows = await conn.query(query, params);
-    conn.release();
-    res.status(200).json(rows);
-  }
-  catch (err){
-    console.log("Erreur " + err);
+      res.status(200).json({ message: "Deck deleted successfully" });
+    } finally {
+      // Assurez-vous de libérer la connexion après utilisation
+      if (conn) conn.release();
+    }
+  } catch (err) {
+    console.error("Error deleting user deck:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
+app.get(
+  "/cards/search/:name/:type/:minprice/:maxprice/:shop/:rarity/:order/:terms",
+  async (req, res) => {
+    try {
+      let conn = await pool_card.getConnection();
+      let query = "SELECT * FROM Carte ";
+      let params = [];
+      let bool = false;
+      let terms = "";
 
+      // IS THERE A TYPE ?
+      if (req.params.type != "default") {
+        if (bool) {
+          query += "AND type LIKE ? ";
+        } else {
+          query += "WHERE type LIKE ? ";
+          bool = true;
+        }
+        params.push("%" + req.params.type + "%");
+      }
+
+      // IS THERE A RARITY GIVEN ?
+      if (req.params.rarity != "default") {
+        if (bool) {
+          query += "AND rarity LIKE ? ";
+        } else {
+          query += "WHERE rarity LIKE ? ";
+          bool = true;
+        }
+        params.push("%" + req.params.rarity + "%");
+      }
+
+      // ARE THERE SEARCHTERMS ?
+      if (req.params.terms != "nosearch") {
+        if (bool) {
+          query += "AND (name LIKE ? OR `desc` LIKE ?) ";
+        } else {
+          query += "WHERE (name LIKE ? OR `desc` LIKE ?) ";
+          bool = true;
+        }
+        terms = req.params.terms.split(" ");
+        let termsString = "";
+        terms.forEach((term) => {
+          termsString += "%" + term + "%";
+        });
+        params.push(termsString);
+        params.push(termsString);
+      }
+
+      // GET SHOP AND PRICE
+      if (bool) {
+        if (req.params.shop == "amazonPrice") {
+          query += "AND amazonPrice >= ? AND amazonPrice <= ? ";
+        } else if (req.params.shop == "cardmarketPrice") {
+          query += "AND cardmarketPrice >= ? AND cardmarketPrice <= ? ";
+        } else if (req.params.shop == "coolstuffincPrice") {
+          query += "AND coolstuffincPrice >= ? AND coolstuffincPrice <= ? ";
+        } else if (req.params.shop == "ebayPrice") {
+          query += "AND ebayPrice >= ? AND ebayPrice <= ? ";
+        } else if (req.params.shop == "tcgplayerPrice") {
+          query += "AND tcgplayerPrice >= ? AND tcgplayerPrice <= ? ";
+        }
+      } else {
+        if (req.params.shop == "amazonPrice") {
+          query += "WHERE amazonPrice >= ? AND amazonPrice <= ? ";
+          bool = true;
+        } else if (req.params.shop == "cardmarketPrice") {
+          query += "WHERE cardmarketPrice >= ? AND cardmarketPrice <= ? ";
+          bool = true;
+        } else if (req.params.shop == "coolstuffincPrice") {
+          query += "WHERE coolstuffincPrice >= ? AND coolstuffincPrice <= ? ";
+          bool = true;
+        } else if (req.params.shop == "ebayPrice") {
+          query += "WHERE ebayPrice >= ? AND ebayPrice <= ? ";
+          bool = true;
+        } else if (req.params.shop == "tcgplayerPrice") {
+          query += "WHERE tcgplayerPrice >= ? AND tcgplayerPrice <= ? ";
+          bool = true;
+        }
+      }
+      params.push(req.params.maxprice);
+      params.push(req.params.minprice);
+
+      // IS THERE A NAME ?
+      if (req.params.name != "false") {
+        if (bool) {
+          query += "AND name LIKE ? ";
+        } else {
+          query += "WHERE name LIKE ? ";
+          bool = true;
+        }
+        params.push("%" + terms + "%");
+      }
+
+      // ORDER
+      query += "ORDER BY name " + req.params.order;
+      // params.push(req.params.order);
+      const rows = await conn.query(query, params);
+      conn.release();
+      res.status(200).json(rows);
+    } catch (err) {
+      console.log("Erreur " + err);
+    }
+  }
+);
 
 app.listen(3001, () => {
   console.log("Serveur à l'écoute");
