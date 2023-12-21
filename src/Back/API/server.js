@@ -326,6 +326,104 @@ app.get("/user/inventory", async (req, res) => {
   }
 });
 
+app.delete("/user/inventory/remove/:inventoryId", async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const userId = getUserIdFromToken(token);
+    const inventoryId = req.params.inventoryId;
+
+    // Utilisez une seule connexion pour effectuer la transaction
+    const conn = await pool_user.getConnection();
+
+    try {
+      // Vérifiez si l'inventaire existe et appartient à l'utilisateur
+      const checkOwnershipQuery =
+        "SELECT utilisateur_id, carte_id FROM Inventaire WHERE id = ?";
+      const checkOwnershipResult = await conn.query(checkOwnershipQuery, [
+        inventoryId,
+      ]);
+
+      if (
+        checkOwnershipResult.length === 0 ||
+        checkOwnershipResult[0].utilisateur_id !== userId
+      ) {
+        return res
+          .status(403)
+          .json({ error: "Forbidden: Invalid inventory item" });
+      }
+
+      // Supprimez la carte de l'inventaire
+      const deleteInventoryQuery = "DELETE FROM Inventaire WHERE id = ?";
+      await conn.query(deleteInventoryQuery, [inventoryId]);
+
+      res
+        .status(200)
+        .json({ message: "Card removed from inventory successfully" });
+    } finally {
+      if (conn) conn.release();
+    }
+  } catch (err) {
+    console.error("Error removing card from inventory:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.post("/user/inventory/add", async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const userId = getUserIdFromToken(token);
+
+    const { carte_id, quantite } = req.body;
+    if (!carte_id || !quantite || isNaN(quantite) || quantite <= 0) {
+      return res.status(400).json({ error: "Invalid request body" });
+    }
+
+    // Utilisez une seule connexion pour effectuer la transaction
+    const conn = await pool_user.getConnection();
+
+    try {
+      // Vérifie si la carte existe
+      const checkCardQuery = "SELECT id FROM projet.Carte WHERE id = ?";
+      const checkCardResult = await conn.query(checkCardQuery, [carte_id]);
+
+      if (checkCardResult.length === 0) {
+        return res.status(404).json({ error: "Card not found" });
+      }
+
+      // Vérifiez si l'utilisateur a déjà cette carte dans son inventaire
+      const checkInventoryQuery =
+        "SELECT id, quantite FROM Inventaire WHERE utilisateur_id = ? AND carte_id = ?";
+      const checkInventoryResult = await conn.query(checkInventoryQuery, [
+        userId,
+        carte_id,
+      ]);
+
+      if (checkInventoryResult.length > 0) {
+        // La carte existe déjà dans l'inventaire, mettez à jour la quantité
+        const updatedQuantite = checkInventoryResult[0].quantite + quantite;
+        const updateInventoryQuery =
+          "UPDATE Inventaire SET quantite = ? WHERE id = ?";
+        await conn.query(updateInventoryQuery, [
+          updatedQuantite,
+          checkInventoryResult[0].id,
+        ]);
+      } else {
+        // Ajoutez la carte à l'inventaire
+        const addInventoryQuery =
+          "INSERT INTO Inventaire (utilisateur_id, carte_id, quantite) VALUES (?, ?, ?)";
+        await conn.query(addInventoryQuery, [userId, carte_id, quantite]);
+      }
+
+      res.status(200).json({ message: "Card added to inventory successfully" });
+    } finally {
+      if (conn) conn.release();
+    }
+  } catch (err) {
+    console.error("Error adding card to inventory:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.get("/user/decks/:deckId/cards", async (req, res) => {
   const { deckId } = req.params;
   const token = req.headers.authorization.split(" ")[1];
