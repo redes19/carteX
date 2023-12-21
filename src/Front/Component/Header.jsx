@@ -9,6 +9,9 @@ import '../../Style/header.css';
 
 const Header = () => {
   const { isLoggedIn, isAdmin, logout } = useAuth();
+  console.log("Auth State in Header:", isLoggedIn);
+  console.log("Auth State in Header:", isAdmin);
+  console.log("Auth State in Header:", logout);
 
   useEffect(() => {
     // Cette fonction sera appelée chaque fois que l'état d'authentification change
