@@ -149,7 +149,7 @@ const handleAddToDeckClick = async () => {
 
   const deleteCardInInventory = async (inventoryId) => {
     try {
-      await axios.deleteCardInInventory(`http://localhost:3001/user/inventory/remove/${inventoryId}`, {
+      await axios.delete(`http://localhost:3001/user/inventory/remove/${inventoryId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },

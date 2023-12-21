@@ -326,50 +326,51 @@ app.get("/user/inventory", async (req, res) => {
   }
 });
 
-app.deleteCardInInventory(
-  "/user/inventory/remove/:inventoryId",
-  async (req, res) => {
+app.delete("/user/inventory/remove/:inventoryId", async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const userId = getUserIdFromToken(token);
+    const inventoryId = req.params.inventoryId;
+
+    // Utilisez une seule connexion pour effectuer la transaction
+    const conn = await pool_user.getConnection();
+
     try {
-      const token = req.headers.authorization.split(" ")[1];
-      const userId = getUserIdFromToken(token);
-      const inventoryId = req.params.inventoryId;
+      // Vérifiez si l'inventaire existe et appartient à l'utilisateur
+      const checkOwnershipQuery =
+        "SELECT utilisateur_id, carte_id FROM Inventaire WHERE id = ?";
+      const checkOwnershipResult = await conn.query(checkOwnershipQuery, [
+        inventoryId,
+      ]);
 
-      // Utilisez une seule connexion pour effectuer la transaction
-      const conn = await pool_user.getConnection();
-
-      try {
-        // Vérifiez si l'inventaire existe et appartient à l'utilisateur
-        const checkOwnershipQuery =
-          "SELECT utilisateur_id, carte_id FROM Inventaire WHERE id = ?";
-        const checkOwnershipResult = await conn.query(checkOwnershipQuery, [
-          inventoryId,
-        ]);
-
-        if (
-          checkOwnershipResult.length === 0 ||
-          checkOwnershipResult[0].utilisateur_id !== userId
-        ) {
-          return res
-            .status(403)
-            .json({ error: "Forbidden: Invalid inventory item" });
-        }
-
-        // Supprimez la carte de l'inventaire
-        const deleteInventoryQuery = "DELETE FROM Inventaire WHERE id = ?";
-        await conn.query(deleteInventoryQuery, [inventoryId]);
-
-        res
-          .status(200)
-          .json({ message: "Card removed from inventory successfully" });
-      } finally {
-        if (conn) conn.release();
+      if (
+        checkOwnershipResult.length === 0 ||
+        checkOwnershipResult[0].utilisateur_id !== userId
+      ) {
+        return res
+          .status(403)
+          .json({ error: "Forbidden: Invalid inventory item" });
       }
-    } catch (err) {
-      console.error("Error removing card from inventory:", err);
-      res.status(500).json({ error: "Internal Server Error" });
+
+      // Supprimez la carte de l'inventaire
+      const deleteInventoryQuery = "DELETE FROM Inventaire WHERE id = ?";
+      await conn.query(deleteInventoryQuery, [inventoryId]);
+
+      // Supprimez la carte de CardDeck
+      const deleteCardDeckQuery = "DELETE FROM CardDeck WHERE carte_id = ?";
+      await conn.query(deleteCardDeckQuery, [checkOwnershipResult[0].carte_id]);
+
+      res
+        .status(200)
+        .json({ message: "Card removed from inventory successfully" });
+    } finally {
+      if (conn) conn.release();
     }
+  } catch (err) {
+    console.error("Error removing card from inventory:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-);
+});
 
 app.post("/user/inventory/add", async (req, res) => {
   try {
