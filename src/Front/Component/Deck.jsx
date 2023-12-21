@@ -116,7 +116,7 @@ const DeckPage = () => {
                   onClick={() => deleteDeck(deck.id)}
                   sx={{ color: 'red', border: 'none' }}
                 >
-                  Supprimer
+                  Delete
                 </Button>
               </CardActions>
             </Card>
