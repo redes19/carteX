@@ -14,7 +14,6 @@ app.use(cors());
 // database connection
 const mariadb = require("mariadb");
 const pool_user = mariadb.createPool({
-const pool_user = mariadb.createPool({
   host: process.env.DB_HOST_PROJECTUSER,
   user: process.env.DB_USER_PROJECTUSER,
   password: process.env.DB_PWD_PROJECTUSER,
