@@ -164,28 +164,79 @@ class CarteDAO {
         }
     }
 
-    public function updateCarte(Carte $carte){
-        $id = $carte->getId();
-        $name = $carte->getName();
-        $desc = $carte->getDesc();
-        $imageUrl = $carte->getImageUrl();
-        $race = $carte->getRace();
-        $type = $carte->getType();
-        $cardId = $carte->getCardId();
+    public function updateCarte(Carte $card){
+        var_dump($card);
+        $query = "UPDATE Carte SET `desc` = ? , imageUrl = ? , race = ? , `type` = ? , cardId = ? ";
+        $array = [
+          $card->getDesc(),
+          $card->getImageUrl(),
+          $card->getRace(),
+          $card->getType(),
+          $card->getCardId(),
+            ];
+        
+        if($card->getAmazonPrice() != null){
+            $query .= ", amazonPrice = ? ";
+            array_push($array, $card->getAmazonPrice());
+        }
+        if($card->getCardmarketPrice() != null){
+            $query .= ", cardmarketPrice = ? ";
+            array_push($array, $card->getCardmarketPrice());
+        }
+        if($card->getCoolstuffincPrice() != null){
+            $query .= ", coolstuffincPrice = ? ";
+            array_push($array, $card->getCoolstuffincPrice());
+        }
+        if($card->getEbayPrice() != null){
+            $query .= ", ebayPrice = ? ";
+            array_push($array, $card->getEbayPrice());
+        }
+        if($card->getTcgplayerPrice() != null){
+            $query .= ", tcgplayerPrice = ? ";
+            array_push($array, $card->getTcgplayerPrice());
+        }
+        if($card->getArchetype() != null){
+            $query .= ", archetype = ? ";
+            array_push($array, $card->getArchetype());
+        }
+        if($card->getAtk() != null){
+            $query .= ", atk = ? ";
+            array_push($array, $card->getAtk());
+        }
+        if($card->getAttribute() != null){
+            $query .= ", `attribute` = ? ";
+            array_push($array, $card->getAttribute());
+        }
+        if($card->getDef() != null){
+            $query .= ", def = ? ";
+            array_push($array, $card->getDef());
+        }
+        if($card->getLevel() != null){
+            $query .= ", level = ? ";
+            array_push($array, $card->getLevel());
+        }
 
-        $stmt = $this->pdo->prepare("UPDATE Carte SET name = :name, `desc` = :desc, imageUrl = :imageUrl, race = :race, type = :type, cardId = :cardId WHERE id = :id");
+        array_push($array, $card->getId());
 
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':desc', $desc);
-        $stmt->bindParam(':imageUrl', $imageUrl);
-        $stmt->bindParam(':race', $race);
-        $stmt->bindParam(':type', $type);
-        $stmt->bindParam(':cardId', $cardId);
-        $stmt->execute();
+        $query .= " WHERE id = ? ";
+        var_dump($query);
+        var_dump($array);
+
+        $conn = $this->pdo;
+
+        $resultInsert = $conn->prepare($query);
+        $resultInsert->execute($array);
+        
+        if ($resultInsert) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function deleteCarte(Carte $carte){
+
+
         $id = $carte->getId();
     
         $stmt = $this->pdo->prepare("DELETE FROM Carte WHERE id = :id");
@@ -199,6 +250,21 @@ class CarteDAO {
             return false;
         }
     }
+
+    public function deleteCarteById($id){
+    
+        $stmt = $this->pdo->prepare("DELETE FROM Carte WHERE id = :id");
+    
+        $stmt->bindParam(':id', $id);
+        
+        // Exécution de la requête
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
 
 
