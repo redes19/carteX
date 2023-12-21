@@ -6,8 +6,7 @@
 src/Back/PHP/composer.json
 src/Back/PHP/composer.lock
 src/Back/PHP/vendor
-package-lock.json
-package.json
+
 
 .pnp.js
 
