@@ -425,6 +425,33 @@ app.get("/user/inventory", async (req, res) => {
   }
 });
 
+// Ajoutez cette route pour gérer l'ajout des cartes à l'inventaire
+app.post("/user/inventory/add", async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const userId = getUserIdFromToken(token);
+    const { cart } = req.body;
+
+    const conn = await pool_user.getConnection();
+
+    try {
+      // Boucle sur chaque carte du panier et ajoute-la à l'inventaire
+      for (const cardId of cart) {
+          const insertInventoryQuery =
+            "INSERT INTO Inventaire (utilisateur_id, carte_id, quantite) VALUES (?, ?, 1)";
+          await conn.query(insertInventoryQuery, [userId, cardId]);
+      }
+
+      res.status(200).json({ message: "Cartes ajoutées à l'inventaire avec succès" });
+    } finally {
+      if (conn) conn.release();
+    }
+  } catch (err) {
+    console.error("Erreur lors de l'ajout des cartes à l'inventaire:", err);
+    res.status(500).json({ error: "Erreur interne du serveur" });
+  }
+});
+
 // Define a route that listens for DELETE requests at the "/user/inventory/remove/:inventoryId" endpoint
 app.delete("/user/inventory/remove/:inventoryId", async (req, res) => {
   try {
@@ -463,7 +490,7 @@ app.delete("/user/inventory/remove/:inventoryId", async (req, res) => {
       await conn.query(deleteInventoryQuery, [inventoryId]);
 
       // Delete the card from CardDeck
-      const deleteCardDeckQuery = "DELETE FROM CardDeck WHERE carte_id = ?";
+      const deleteCardDeckQuery = "DELETE FROM CarteDeck WHERE carte_id = ?";
       await conn.query(deleteCardDeckQuery, [checkOwnershipResult[0].carte_id]);
 
       // Respond to the client with a status code of 200 (OK) and a success message

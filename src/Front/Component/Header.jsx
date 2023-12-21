@@ -20,6 +20,28 @@ const Header = () => {
   const [cardDetails, setCardDetails] = useState([]);
 
 
+  const handleAddToInventory = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3001/user/inventory/add',
+        { cart: cart },
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+      );
+
+      // Vérifiez la réponse du serveur et videz le panier si l'ajout est réussi
+      if (response.status === 200) {
+        clearCart();
+        alert("Cartes ajoutées à l'inventaire avec succès");
+      } else {
+        alert("Erreur lors de l'ajout des cartes à l'inventaire");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la requête API:", error);
+      alert("Erreur lors de la requête API");
+    }
+  };
+
+
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -80,6 +102,11 @@ const Header = () => {
         <Button variant="contained" color="primary" onClick={clearCart}>
             Vider le panier
         </Button>
+        {cart.length > 0 && (
+          <Button variant="contained" color="primary" onClick={handleAddToInventory}>
+            Ajouter à l'inventaire
+          </Button>
+        )}
       </>
     );
   };
