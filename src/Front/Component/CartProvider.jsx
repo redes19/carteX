@@ -7,8 +7,16 @@ const cartReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_TO_CART':
       return [...state, action.payload];
-    case 'REMOVE_FROM_CART':
-      return state.filter((itemId) => itemId !== action.payload);
+      case 'REMOVE_ONE_FROM_CART':
+        const index = state.findIndex((itemId) => itemId === action.payload);
+        if (index !== -1) {
+          const newState = [...state];
+          newState.splice(index, 1);
+          return newState;
+        }
+        return state;
+    case 'REMOVE_ALL_FROM_CART':
+      return [];
     default:
       return state;
   }
@@ -39,11 +47,15 @@ const CartProvider = ({ children }) => {
   };
 
   const removeFromCart = (cardId) => {
-    dispatch({ type: 'REMOVE_FROM_CART', payload: cardId });
+    dispatch({ type: 'REMOVE_ONE_FROM_CART', payload: cardId });
+  };
+
+  const clearCart = () => {
+    dispatch({ type: 'REMOVE_ALL_FROM_CART' });
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
       {children}
     </CartContext.Provider>
   );

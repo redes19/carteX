@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemText } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
@@ -6,17 +6,19 @@ import { useCart } from "./CartProvider";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 import '../../Style/header.css';
 
 const Header = () => {
+  const navigate = useNavigate();
   const { isLoggedIn, isAdmin, logout } = useAuth();
-  const { cart } = useCart();
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const { cart, removeFromCart,clearCart } = useCart();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [cardDetails, setCardDetails] = useState([]);
 
-  useEffect(() => {
-    console.log("Auth State in Header Updated:", isLoggedIn);
-  }, [isLoggedIn]);
 
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -25,12 +27,63 @@ const Header = () => {
     setDrawerOpen(open);
   };
 
-  const cartItems = cart.map(itemId => (
-    // Vous pouvez afficher les détails de chaque élément du panier ici
-    <ListItem key={itemId}>
-      <ListItemText primary={`Item ID: ${itemId}`} />
-    </ListItem>
-  ));
+  const fetchCard = async (cardId) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token == null) {
+        navigate('/');
+        return null;
+      }
+
+      const response = await axios.get(`http://localhost:3001/cards/${cardId}`);
+      console.log(response.data);
+      return response.data;  // Utiliser la colonne 'name' pour le nom de la carte
+    } catch (error) {
+      console.error('Error fetching card:', error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const fetchCardNames = async () => {
+      const cardDetailsPromises = cart.map(async (cardId) => {
+        return fetchCard(cardId);
+      });
+  
+      const resolvedCardDetails = await Promise.all(cardDetailsPromises);
+      setCardDetails(resolvedCardDetails.filter(Boolean).flat()); 
+      setLoading(false);
+      console.log("///////////////////////////////////////////");
+      console.log(cardDetails);
+    };
+  
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (JSON.stringify(cart) !== JSON.stringify(storedCart)) {
+      fetchCardNames();
+    }
+  }, [cart, navigate]);
+
+  const renderCard = () => {
+    return (
+      <>
+        <List>
+          {cardDetails.map((card, index) => (
+            <ListItem key={`cardName_${index}`}>
+              <ListItemText primary={card.name} />
+              <Button variant="outlined" color="secondary" onClick={() => removeFromCart(card.id)}>
+                Supprimer
+              </Button>
+            </ListItem>
+            
+          ))}
+        </List>
+        <Button variant="contained" color="primary" onClick={clearCart}>
+            Vider le panier
+        </Button>
+      </>
+    );
+  };
+
 
   if (isLoggedIn) {
     return (
@@ -63,12 +116,10 @@ const Header = () => {
           </Button>
         </Toolbar>
         <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
-          <List>
-            {cartItems}
-          </List>
-        </Drawer>
+        {renderCard()}
+      </Drawer>
       </AppBar>
-    )
+    );
   } else {
     return (
       <AppBar position="sticky" className="header-appbar">
@@ -89,8 +140,8 @@ const Header = () => {
           </div>
         </Toolbar>
       </AppBar>
-    )
+    );
   }
-}
+};
 
 export default Header;
