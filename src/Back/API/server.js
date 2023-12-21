@@ -374,7 +374,6 @@ app.post("/user/decks/:deckId/:cardId", async (req, res) => {
   let conn;
 
   try {
-    // Assurez-vous que la logique d'accès à la base de données est correcte
     conn = await pool_user.getConnection();
 
     // Vérifier que le deck appartient à l'utilisateur
@@ -400,7 +399,6 @@ app.post("/user/decks/:deckId/:cardId", async (req, res) => {
 
     const cardsResult = await conn.query(cardsQuery, [deckId, cardId]);
 
-    // Vérifier si cardsResult est un tableau avant d'utiliser la méthode map
     const serializedResult = Array.isArray(cardsResult)
       ? cardsResult.map((row) => ({
           deck_id: Number(row.deck_id),
@@ -411,6 +409,50 @@ app.post("/user/decks/:deckId/:cardId", async (req, res) => {
     res.status(200).json(serializedResult);
   } catch (err) {
     console.error("Error adding card to deck:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (conn) conn.release();
+  }
+});
+
+// Supprimer une carte d'un deck par ID
+app.delete("/user/decks/:deckId/cards/:cardId", async (req, res) => {
+  const { deckId, cardId } = req.params;
+  const token = req.headers.authorization.split(" ")[1];
+
+  // Utiliser getUserIdFromToken pour obtenir l'ID de l'utilisateur
+  const userId = getUserIdFromToken(token);
+
+  let conn;
+
+  try {
+    conn = await pool_user.getConnection();
+
+    // Vérifier que le deck appartient à l'utilisateur
+    const deckOwnershipQuery = `
+      SELECT user_id FROM Deck WHERE id = ?;
+    `;
+    const deckOwnershipResult = await conn.query(deckOwnershipQuery, [deckId]);
+
+    if (
+      deckOwnershipResult.length === 0 ||
+      deckOwnershipResult[0].user_id !== userId
+    ) {
+      // Le deck n'appartient pas à l'utilisateur actuel
+      res.status(403).json({ error: "Unauthorized" });
+      return;
+    }
+
+    // Supprimer la carte spécifique du deck
+    const deleteCardQuery = `
+      DELETE FROM CarteDeck
+      WHERE deck_id = ? AND carte_id = ?;
+    `;
+    await conn.query(deleteCardQuery, [deckId, cardId]);
+
+    res.status(200).json({ message: "Card deleted from deck successfully" });
+  } catch (err) {
+    console.error("Error deleting card from deck:", err);
     res.status(500).json({ error: "Internal Server Error" });
   } finally {
     if (conn) conn.release();
