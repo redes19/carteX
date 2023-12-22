@@ -1,8 +1,8 @@
 CarteX
 projet final de l'UE dev web
 
-wOlwin: Teo Bacher
-Redes19: Loris Laurenti
+- wOlwin: Teo Bacher
+- Redes19: Loris Laurenti
 Nous avons deux base de donné pour plus de sécurité : si l'une tombe, l'autre n'est pas affectée.
 
 - Une BDD pour les cartes
