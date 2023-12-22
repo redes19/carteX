@@ -41,3 +41,10 @@ Lancer le server js
 
 Lancer server php:
 - php -S localhost:8000
+
+Dans le .env il faudras rajouter cette ligne. Elle sert a decodé les token.
+JWT_SECRET_KEY="QR)V!6;3gwhnW9vk%76G2?X7="
+
+
+
+
