@@ -37,7 +37,7 @@ style :
 - npm install @mui/icons-material
 
 Lancer le server js
-nodemon server.js
+- nodemon server.js
 
-lancer server php:
+Lancer server php:
 - php -S localhost:8000
