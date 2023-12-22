@@ -4,6 +4,9 @@ projet final de l'UE dev web
 - wOlwin: Teo Bacher
 - Redes19: Loris Laurenti
 
+Pour se connecté en tant qu'admin:
+teo@teo.com
+Azertyu1
 Nous avons deux bases de données pour plus de sécurité : si l'une tombe, l'autre n'est pas affectée.
 
 - Une BDD pour les cartes
